@@ -4,14 +4,12 @@ var canvas_overlay = 0;
 var context_overlay = 0;
 var canvas_background = 0;
 var context_background = 0;
-var layers_canvas = new Array;
-var layers_context = new Array;
 var current_layer = 0;
 var mode = 0;
 
 var layers_colors = ["red", "blue", "green"];
 
-var layout = {height: 10, width: 10, layers: 3};
+var layout = {height: size_y, width: size_x, layers: nb_layers};
 
 var placedPieces = new Array;
 
@@ -22,10 +20,14 @@ var currentPiece = 0;
 var rotatePiece = 0;
 
 window.onload = function(){
-	load_canvas();
-	layer_buttons();
-	blockSelectButtons();
-	modeSelectButton();
+	var validate_open_project = document.getElementById('validate_open_project');
+	validate_open_project.onclick=function(){
+		layout = {height: size_y, width: size_x, layers: nb_layers}
+		load_canvas();
+		layer_buttons();
+		blockSelectButtons();
+		modeSelectButton();
+	}
 }
 
 function load_canvas()
@@ -108,19 +110,9 @@ function load_canvas()
             return;
 
         }
-
-
+		
 	alert("ok")
     display_layout();
-	
-	for(i=0;i<layout.layers;i++){
-		var id = "layer_" + i;
-		alert(id);
-		layers_canvas.push(document.getElementById(id));
-		alert(layers_canvas[i].height);
-		layers_context.push(layers_canvas[i].getContext('2d'));
-	}
-	
 }
 
 function display_layout(){
