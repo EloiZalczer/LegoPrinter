@@ -21,6 +21,7 @@ var rotatePiece = 0;
 
 window.onload = function(){
 	var validate_open_project = document.getElementById('validate_open_project');
+	
 	validate_open_project.onclick=function(){
 		layout = {height: size_y, width: size_x, layers: nb_layers}
 		load_canvas();
@@ -123,9 +124,9 @@ function display_layout(){
 	context_background.fillStyle = "gray";
 	context_background.fillRect(0, 0, canvas.width, canvas.height);
 	
-	for( i = 0; i < layout.width; i++){
+	for( i = 0; i < layout.height; i++){
 		centerY = canvas.height/(layout.height*2)+i*(canvas.height/layout.height);
-		for( j = 0; j < layout.height; j++){
+		for( j = 0; j < layout.width; j++){
 			centerX = canvas.width/(layout.width*2)+j*(canvas.width/layout.width);
 			context.beginPath();
 			context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -332,12 +333,12 @@ function layer_buttons()
 
 	layer_up.onclick = function(){
 		alert("click");
-		if(current_layer<2){
+		if(current_layer<nb_layers){
 			current_layer++;
 			alert("You are on layer"+current_layer);
 		}
 		else{
-			alert("There are only 3 layers");
+			alert("There are only "+nb_layers+" layers");
 		}
 	}
 
