@@ -9,9 +9,25 @@ window.addEventListener("load",function(){
 	var create_project = document.getElementById('create_project');
 	var existing_project = document.getElementById('existing_project');
     
-    validate_open_project.onclick = function(){
+	validate_open_project.addEventListener("click", start_project, false);
+	
+},false);
+
+function checkNumber(mode, value){
+	alert('checkNumber');
+	if(Number.isNaN(value)){
+		alert('not an integer');
+		return false;
+	}
+	if((mode==0 && value>20) || (mode==1 && value>5)){
+		return false;
+	}
+	return true;
+}
+
+function start_project(){
 		var valid=1;
-		if(create_project.checked=true){
+		if(create_project.checked==true){
 			size_x=document.getElementById('size_x').value;
 			size_y=document.getElementById('size_y').value;
 			nb_layers=document.getElementById('size_z').value;
@@ -22,13 +38,14 @@ window.addEventListener("load",function(){
 				error.innerHTML="Paramètres invalides";
 			}
 		}
-		else if(existing_project.checked=true){
+		else if(existing_project.checked==true){
 			alert("Open existing project");
 		}
 		else{
 			valid=0;
 		}
 		if(valid==1){
+			alert('remove');
 			open_project.remove();
 			start_overlay.remove();
 			var user_canvas = document.getElementById('user_canvas');
@@ -43,18 +60,15 @@ window.addEventListener("load",function(){
 				alert(layers_canvas[i].height);
 				layers_context.push(layers_canvas[i].getContext('2d'));
 			}
+			canvas = document.getElementById('layout_canvas');
+			canvas_overlay = document.getElementById('overlay');
+			canvas_background = document.getElementById('background');
+			canvas.width=size_x*50;
+			canvas.height=size_y*50;
+			canvas_overlay.width=size_x*50;
+			canvas_overlay.height=size_y*50;
+			canvas_background.width=size_x*50;
+			canvas_background.height=size_y*50;
+			document.title=new_project_name;
 		}
-    }
-},false);
-
-function checkNumber(mode, value){
-	alert('checkNumber');
-	if(Number.isNaN(value)){
-		alert('not an integer');
-		return false;
-	}
-	if((mode==0 && value>20) || (mode==1 && value>5)){
-		return false;
-	}
-	return true;
 }
