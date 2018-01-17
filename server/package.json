@@ -1,0 +1,18 @@
+{
+  "name": "legoapp",
+  "version": "1.0.0",
+  "description": "Serveur du projet IMA4 LEGO",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.12.5"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
