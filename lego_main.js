@@ -4,14 +4,13 @@ var canvas_overlay = 0;
 var context_overlay = 0;
 var canvas_background = 0;
 var context_background = 0;
-var current_layer = 0;
+var current_layer = 1;
+var current_layer_div;
 var mode = 0;
 
 var layers_colors = ["red", "blue", "green"];
 
 var layout = {height: size_y, width: size_x, layers: nb_layers};
-
-var placedPieces = new Array;
 
 var pieces = [{sizeX: 1, sizeY: 1}, {sizeX: 1, sizeY: 2}, {sizeX: 2, sizeY: 2}];
 
@@ -20,15 +19,16 @@ var currentPiece = 0;
 var rotatePiece = 0;
 
 window.onload = function(){
-	var validate_open_project = document.getElementById('validate_open_project');
-	
-	validate_open_project.onclick=function(){
-		layout = {height: size_y, width: size_x, layers: nb_layers}
-		load_canvas();
-		layer_buttons();
-		blockSelectButtons();
-		modeSelectButton();
-	}
+    var validate_open_project = document.getElementById('validate_open_project');
+    current_layer_div = document.getElementById('current_layer');
+    validate_open_project.onclick=function(){
+	layout = {height: size_y, width: size_x, layers: nb_layers}
+	load_canvas();
+	layer_buttons();
+	blockSelectButtons();
+	modeSelectButton();
+	window.addEventListener('click', legoClick, false);
+    }
 }
 
 function load_canvas()
@@ -112,7 +112,6 @@ function load_canvas()
 
         }
 		
-	alert("ok")
     display_layout();
 }
 
@@ -236,9 +235,28 @@ MOUSE CLICK HANDLING
 */
 
 function legoClick(e){
-    evt = e || window.event;
-    if ("buttons" in evt) {
-        if(evt.buttons == 1){
+    if(edit==1){
+	evt = e || window.event;
+	if ("buttons" in evt) {
+            if(evt.buttons == 1){
+		if(mode==0){
+		    ret=checkPiece(e);
+		    if(ret==1){
+			placeLegoGraph(e);
+			addPiece(e);
+		    }
+		    else if(ret==2){
+			alert("Impossible de placer une pièce ici : aucune pièce en-dessous");
+		    }
+		}
+		else if(mode==1){
+		    removePiece(e);
+		}
+		return 0;
+	    }
+	}
+	var button = evt.which || evt.button;
+	if(button==1){
 	    if(mode==0){
 		ret=checkPiece(e);
 		if(ret==1){
@@ -255,29 +273,13 @@ function legoClick(e){
 	    return 0;
 	}
     }
-    var button = evt.which || evt.button;
-    if(button==1){
-	if(mode==0){
-	    ret=checkPiece(e);
-	    if(ret==1){
-		placeLegoGraph(e);
-		addPiece(e);
-	    }
-	    else if(ret==2){
-		alert("Impossible de placer une pièce ici : aucune pièce en-dessous");
-	    }
-	}
-	else if(mode==1){
-		removePiece(e);
-	}
-	return 0;
-    }
 }
+
 
 function checkPiece(e){
 	var pos = getMousePos(e);
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
-		if(current_layer==0){return 1;}
+		if(current_layer==1){return 1;}
 		for(i=0;i<placedPieces.length;i++){
 			piece=placedPieces[i];
 			if(piece.posX<pos.x && piece.posX+(piece.sizeX*(canvas.width/layout.width))>pos.x && piece.posY<pos.y && piece.posY+(piece.sizeY*(canvas.height/layout.height))>pos.y && piece.posZ==current_layer-1){
@@ -293,13 +295,12 @@ function placeLegoGraph(e){
 	var pos = getMousePos(e);
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 		params = getBlockParams(pos.x, pos.y)
-		layers_context[current_layer].fillStyle = layers_colors[current_layer];
+		layers_context[current_layer-1].fillStyle = layers_colors[current_layer-1];
 		posY = Math.trunc(pos.y*(layout.height/canvas.height))*(canvas.height/layout.height);
 		posX = Math.trunc(pos.x*(layout.width/canvas.width))*(canvas.width/layout.width);
-		layers_context[current_layer].fillRect(params.posX, params.posY, (canvas.width/layout.width)*params.sizeX, (canvas.height/layout.height)*params.sizeY);
+		layers_context[current_layer-1].fillRect(params.posX, params.posY, (canvas.width/layout.width)*params.sizeX, (canvas.height/layout.height)*params.sizeY);
 	}
 }
-window.addEventListener('click', legoClick, false);
 
 function addPiece(e){
 	var pos = getMousePos(e);
@@ -314,7 +315,7 @@ function removePiece(e){
 	for(i=0;i<placedPieces.length;i++){
 		piece=placedPieces[i];
 		if(piece.posX<pos.x && piece.posX+(piece.sizeX*(canvas.width/layout.width))>pos.x && piece.posY<pos.y && piece.posY+(piece.sizeY*(canvas.height/layout.height))>pos.y && piece.posZ==current_layer){
-			layers_context[piece.posZ].clearRect(piece.posX, piece.posY, (canvas.width/layout.width)*piece.sizeX, (canvas.height/layout.height)*piece.sizeY);
+			layers_context[piece.posZ-1].clearRect(piece.posX, piece.posY, (canvas.width/layout.width)*piece.sizeX, (canvas.height/layout.height)*piece.sizeY);
 			placedPieces.splice(i, 1);
 			break;
 		}
@@ -332,10 +333,9 @@ function layer_buttons()
 	layer_down = document.getElementById('layer_down');
 
 	layer_up.onclick = function(){
-		alert("click");
 		if(current_layer<nb_layers){
-			current_layer++;
-			alert("You are on layer"+current_layer);
+		    current_layer++;
+		    current_layer_div.innerHTML=current_layer;
 		}
 		else{
 			alert("There are only "+nb_layers+" layers");
@@ -343,12 +343,12 @@ function layer_buttons()
 	}
 
 	layer_down.onclick = function(){
-		if(current_layer>0){
+		if(current_layer>1){
 			current_layer--;
-			alert("You are on layer"+current_layer);
+			current_layer_div.innerHTML=current_layer;
 		}
 		else{
-			alert("You can't go below layer 0");
+			alert("You can't go below layer 1");
 		}
 	}
 }
@@ -396,4 +396,3 @@ window.addEventListener('contextmenu', function(e) {
 		return false;
 	}
 }, false);
-

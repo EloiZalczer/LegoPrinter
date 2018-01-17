@@ -1,3 +1,5 @@
+const block_size=30;
+
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
 }
@@ -6,15 +8,14 @@ window.addEventListener("load",function(){
     var validate_open_project = document.getElementById('validate_open_project');
     var open_project = document.getElementById('open_project');
     var start_overlay = document.getElementById('start_overlay');
-	var create_project = document.getElementById('create_project');
-	var existing_project = document.getElementById('existing_project');
+    var create_project = document.getElementById('create_project');
+    var existing_project = document.getElementById('existing_project');
     
-	validate_open_project.addEventListener("click", start_project, false);
-	
+    validate_open_project.addEventListener("click", start_project, false);
+    
 },false);
 
 function checkNumber(mode, value){
-	alert('checkNumber');
 	if(Number.isNaN(value)){
 		alert('not an integer');
 		return false;
@@ -45,30 +46,27 @@ function start_project(){
 			valid=0;
 		}
 		if(valid==1){
-			alert('remove');
 			open_project.remove();
 			start_overlay.remove();
 			var user_canvas = document.getElementById('user_canvas');
 			for(var i=0;i<nb_layers;i++){
-				user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+size_x*50+'" height="'+size_y*50+'">\n</canvas>\n';
+				user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+size_x*block_size+'" height="'+size_y*block_size+'">\n</canvas>\n';
 			}
 			for(var i=0;i<nb_layers;i++){
 				var id = "layer_" + i;
-				alert(id);
-				alert(nb_layers);
 				layers_canvas.push(document.getElementById(id));
-				alert(layers_canvas[i].height);
 				layers_context.push(layers_canvas[i].getContext('2d'));
 			}
 			canvas = document.getElementById('layout_canvas');
 			canvas_overlay = document.getElementById('overlay');
 			canvas_background = document.getElementById('background');
-			canvas.width=size_x*50;
-			canvas.height=size_y*50;
-			canvas_overlay.width=size_x*50;
-			canvas_overlay.height=size_y*50;
-			canvas_background.width=size_x*50;
-			canvas_background.height=size_y*50;
-			document.title=new_project_name;
+			canvas.width=size_x*block_size;
+			canvas.height=size_y*block_size;
+			canvas_overlay.width=size_x*block_size;
+			canvas_overlay.height=size_y*block_size;
+			canvas_background.width=size_x*block_size;
+			canvas_background.height=size_y*block_size;
+		    document.title=new_project_name;
+		    edit=1;
 		}
 }

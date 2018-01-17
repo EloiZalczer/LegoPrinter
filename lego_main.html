@@ -9,23 +9,29 @@
 		var new_project_name;
 		var layers_canvas = new Array;
 		var layers_context = new Array;
+		var edit=0;
+		var placedPieces = new Array;
 	  </script>
 	  <script type="text/javascript" src="init_project.js"></script>
 	  <script type="text/javascript" src="lego_main.js"></script>
+	  <script type="text/javascript" src="print.js"></script>
+	  <script type="text/javascript" src="save.js"></script>
 	  <link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-	  <div id="open_project">
-	    <h2>Démarrer</h2>
-		<p id="error"></p>
-	    <input type="radio" name="open_mode" value="new_project" id="create_project">Créer un nouveau projet :
-	    <input type="text" id="new_project_name">
-	    <p>Dimensions :<br/>x : 
-	      <input type="text" id="size_x">
-	      y: <input type="text" id="size_y">
-	      z: <input type="text" id="size_z"></p>
-	    <input type="radio" name="open_mode" value="Projet existant" id="existing_project">Ouvrir un projet existant : 
-	    <button id="validate_open_project">Valider</button>
+	  <div id="popups">
+	    <div id="open_project">
+	      <h2>Démarrer</h2>
+	      <p id="error"></p>
+	      <input type="radio" name="open_mode" value="new_project" id="create_project">Créer un nouveau projet :
+	      <input type="text" id="new_project_name">
+	      <p>Dimensions :<br/>x : 
+		<input type="text" id="size_x">
+		y: <input type="text" id="size_y">
+		z: <input type="text" id="size_z"></p>
+	      <input type="radio" name="open_mode" value="Projet existant" id="existing_project">Ouvrir un projet existant : 
+	      <button id="validate_open_project">Valider</button>
+	    </div>
 	  </div>
 	  <div id="start_overlay"></div>
 	  <canvas id="background">
@@ -39,18 +45,24 @@
 	  <canvas id="overlay">
 	    Keskispass
 	  </canvas>
-	  <button id="layer_up">LAYER UP</button>
-	  <button id="layer_down">LAYER DOWN</button>
-	  <select name="blocks" id="blockselect">
-	    <option value="0">1_1</option>
-	    <option value="1">1_2</option>
-	    <option value="2">2_2</option>
-	  </select>
-	  <button id="validateBlock">Valider</button>
-	  <select name="action" id="modeselect">
-	    <option value="0">Placer</option>
-	    <option value="1">Supprimer</option>
-	  </select>
-	  <button id="validateMode">Valider</button>
+	  <div id="menus">
+	    <button id="layer_up">LAYER UP</button>
+	    <button id="layer_down">LAYER DOWN</button>
+	    <p>Current layer : </p>
+	    <p id="current_layer">1</p>
+	    <select name="blocks" id="blockselect">
+	      <option value="0">1_1</option>
+	      <option value="1">1_2</option>
+	      <option value="2">2_2</option>
+	    </select>
+	    <button id="validateBlock">Valider</button>
+	    <select name="action" id="modeselect">
+	      <option value="0">Placer</option>
+	      <option value="1">Supprimer</option>
+	    </select>
+	    <button id="validateMode">Valider</button>
+	    <button id="print">Imprimer</button>
+	    <button id="save_model">Sauvegarder</button>
+	  </div>
 	</body>
 </html>
