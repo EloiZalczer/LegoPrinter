@@ -8,8 +8,7 @@ function saveModel()
     save_model.onclick = function(){
 	edit=0;
 	alert('Sauvegarde en cours');
-
-	var url = "http://localhost:3000/tasks";
+	var url = "http://192.168.1.97:3000/tasks";
 
 	var json = JSON.stringify(placedPieces);
 	console.log(json)

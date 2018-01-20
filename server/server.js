@@ -2,9 +2,11 @@ var express=require('express'),
     app = express(),
     port = process.env.PORT || 3000;
 
-var bodyParser = require('body-parser')
-
 var pg = require('./lib/postgres');
+
+var DATABASE_URL = 'postgres://pi:raspberry@localhost:5432/lego_api'
+
+var bodyParser = require('body-parser')
 
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
@@ -18,8 +20,6 @@ app.use(bodyParser.json())
 
 var routes = require('./api/routes/legoRoutes');
 routes(app);
-
-var DATABASE_URL = 'postgres://username:password@localhost/api'
 
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl +  ' not found'})

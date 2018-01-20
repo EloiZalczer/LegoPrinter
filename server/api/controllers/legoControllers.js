@@ -1,5 +1,7 @@
 'use strict';
 
+var pg = require('../../lib/postgres');
+
 exports.list_projects = function(req, res) {
     res.json({test:"list_projects"});
 };
@@ -17,8 +19,8 @@ exports.open_project = function(req, res) {
 
 exports.save_project = function(req, res) {
     console.log(req.body);
-    var sql = 'SELECT * FROM PROJET';
-    postgres.client.query(sql, function(err, results){
+    var sql = 'SELECT * FROM PROJECT';
+    pg.client.query(sql, function(err, results){
 	if(err){
 	    console.error(err);
 	    res.statusCode = 500;
