@@ -17,6 +17,14 @@ exports.open_project = function(req, res) {
 
 exports.save_project = function(req, res) {
     console.log(req.body);
+    var sql = 'SELECT * FROM PROJET';
+    postgres.client.query(sql, function(err, results){
+	if(err){
+	    console.error(err);
+	    res.statusCode = 500;
+	    return res.json({errors: ['Could not save project'] });
+	}
+    });
   res.json({test:"save_project"});
 };
 
