@@ -1,4 +1,3 @@
-var pieces = new Array();
 
 function piecesConstructor(type, color, size_x, size_y){
     this.type=type;
@@ -11,27 +10,29 @@ window.addEventListener("load",function(){
     load_pieces();
 }, false);
 
-function load_pieces(
+function load_pieces(){
     edit=0;
-    infos=document.getElementById('infos');
-    infos.innerHTML = 'Chargement des pièces';
-    
+    info('Chargement des pièces');
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url+'/pieces', true);
     xhr.onload = function () {
-	var pieces = JSON.parse(xhr.responseText);
+	var get_pieces = JSON.parse(xhr.responseText);
 	var blockselect = document.getElementById('blockselect');
 	if (xhr.readyState == 4 && xhr.status == "200") {
-	    console.table(pieces);
+	    console.table(get_pieces);
 	    var i=0;
-	    for piece in pieces{
-		pieces.push(new piecesConstructor(piece.type, piece.color, piece.size_x, piece.size_y));
-		blockselect.innerHTML += 'option value="'+i+'">'+piece.size_x+'x'+piece.size_y+'</option>';
+	    for (piece in get_pieces)
+	    {
+		pieces.push(new piecesConstructor(get_pieces[piece].type, get_pieces[piece].color, get_pieces[piece].size_x, get_pieces[piece].size_y));
+		blockselect.innerHTML += '<option value="'+i+'">'+get_pieces[piece].size_x+'x'+get_pieces[piece].size_y+'</option>';
+		i++;
 	    }
 	} else {
 	    console.error(pieces);
 	}
-    }
+    }	
+    xhr.send();
 
+    info('');	
     edit=1;
-)
+}

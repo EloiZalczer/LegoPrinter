@@ -9,7 +9,7 @@ module.exports = function(app) {
 	.get(lego.list_projects)
 	.post(lego.create_project);
     
-    app.route('/project/:projectId')
+    app.route('/project/:project_id')
 	.get(lego.open_project)
 	.put(lego.save_project)
 	.delete(lego.delete_project);

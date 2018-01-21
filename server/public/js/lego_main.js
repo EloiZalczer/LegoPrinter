@@ -190,7 +190,7 @@ function getBlockParams(posX, posY){
     switch(rotatePiece){
     case 0:
 	posY = posY-pieces[currentPiece].size_y + 1;
-	sizeX = pieces[currentPiece].size_y;
+	sizeX = pieces[currentPiece].size_x;
 	sizeY = pieces[currentPiece].size_y;
 	break;
     case 1:
@@ -200,7 +200,7 @@ function getBlockParams(posX, posY){
     case 2:
 	posX = posX-pieces[currentPiece].size_x + 1;
 	sizeX = pieces[currentPiece].size_x;
-	sizeY = pieces[currentPiece].size_x;
+	sizeY = pieces[currentPiece].size_y;
 	break;
     case 3:
 	posY = posY-pieces[currentPiece].size_x + 1;
@@ -225,7 +225,7 @@ function getBlockParams(posX, posY){
     else if(posY<0){
 	posY = posY+canvas.height/layout.height;
     }
-    return({posX: posX, posY: posY, posZ: current_layer, sizeX: sizeX, sizeY: sizeY});
+    return({posX: posX, posY: posY, posZ: current_layer, sizeX: sizeX, sizeY: sizeY, type: pieces[currentPiece].type, orientation: rotatePiece});
 }
 
 /*

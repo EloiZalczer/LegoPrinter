@@ -13,7 +13,9 @@
 		var placedPieces = new Array;
 		var project_id;
 		var url = "http://192.168.1.97:3000";
+		var pieces = new Array();
 	  </script>
+	  <script type="text/javascript" src="/js/utils.js"></script>
 	  <script type="text/javascript" src="/js/init_project.js"></script>
 	  <script type="text/javascript" src="/js/get_list_pieces.js"></script>
 	  <script type="text/javascript" src="/js/lego_main.js"></script>
@@ -32,7 +34,9 @@
 		<input type="text" id="size_x">
 		y: <input type="text" id="size_y">
 		z: <input type="text" id="size_z"></p>
-	      <input type="radio" name="open_mode" value="Projet existant" id="existing_project">Ouvrir un projet existant : 
+	      <input type="radio" name="open_mode" value="Projet existant" id="existing_project">Ouvrir un projet existant :
+	      <select name="project_to_open" id="projectselect">
+	      </select> 
 	      <button id="validate_open_project">Valider</button>
 	    </div>
 	  </div>
@@ -54,9 +58,6 @@
 	    <p>Current layer : </p>
 	    <p id="current_layer">1</p>
 	    <select name="blocks" id="blockselect">
-	      <option value="0">1_1</option>
-	      <option value="1">1_2</option>
-	      <option value="2">2_2</option>
 	    </select>
 	    <button id="validateBlock">Valider</button>
 	    <select name="action" id="modeselect">

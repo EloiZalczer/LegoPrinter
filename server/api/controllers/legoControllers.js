@@ -11,7 +11,7 @@ exports.list_projects = function(req, res) {
 	    return res.json({errors: ['Could not load projects list'] });
 	}
 	res.statusCode = 200;
-	return res.json(results);
+	return res.json(results.rows);
     });
 };
 
@@ -55,8 +55,10 @@ exports.save_project = function(req, res) {
 	}
     });
     sql = 'INSERT INTO PLACED_PIECES VALUES ';
-    for item in req.body{
-	sql+='('+req.params.project_id+', '+item.type+', '+item.orientation+', '+item.position_x+', '+item.position_y+', '+item.position_z+'),';
+    console.log(req.params.project_id);
+    for (var item in req.body){
+	console.log(req.body[item]);
+	sql+='('+req.params.project_id+', '+req.body[item].type+', '+req.body[item].orientation+', '+req.body[item].posX+', '+req.body[item].posY+', '+req.body[item].posZ+'),';
     }
     sql = sql.slice(0, -1);
     sql+=';';
@@ -90,10 +92,9 @@ exports.delete_project = function(req, res) {
 	    }
 	    res.statusCode = 200;
 	    return res.json(results);
-	)};
+	});
     });
-    res.json({test:"delete_project"});
-};
+}
 
 exports.mainpage = function(req, res){
     res.render('lego_main.html');
@@ -108,6 +109,6 @@ exports.list_pieces = function(req, res){
 	    return res.json({errors: ['Could not load pieces'] });
 	}
 	res.statusCode = 200;
-	return res.json(results);
+	return res.json(results.rows);
     });
 }

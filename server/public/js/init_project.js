@@ -1,4 +1,5 @@
 const block_size=30;
+var projects_list;
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -11,6 +12,8 @@ window.addEventListener("load",function(){
     var create_project = document.getElementById('create_project');
     var existing_project = document.getElementById('existing_project');
     
+    projects_list=load_projects_list();
+
     validate_open_project.addEventListener("click", start_project, false);
     
 },false);
@@ -40,7 +43,8 @@ function start_project(){
 			}
 		}
 		else if(existing_project.checked==true){
-			alert("Open existing project");
+			info("Open existing project");
+			
 		}
 		else{
 			valid=0;
@@ -69,4 +73,29 @@ function start_project(){
 		    document.title=new_project_name;
 		    edit=1;
 		}
+}
+
+function load_projects_list(){
+    info('Chargement des projets');
+
+    var projects;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url+'/project', true);
+    xhr.onload = function() {
+	projects = JSON.parse(xhr.responseText);
+	var projectselect = document.getElementById("projectselect");
+	if (xhr.readyState ==4 && xhr.status == "200"){
+	    console.table(projects);
+	    for (item in projects){
+		projectselect.innerHTML += '<option value="'+projects[item].project_id+'">'+projects[item].project_name+'</option>';
+	    }
+	}
+	else{
+	    console.error(projects);
+	}
+    }
+
+    xhr.send();
+    return projects;
 }
