@@ -43,8 +43,10 @@ function start_project(){
 			}
 		}
 		else if(existing_project.checked==true){
-			info("Open existing project");
-			
+		    info("Open existing project");
+		    var projectselect = document.getElementById('projectselect');
+		    var project_to_open = projectselect.options[projectselect.selectedIndex].value;
+		    open_project(project_to_open);
 		}
 		else{
 			valid=0;
@@ -88,7 +90,7 @@ function load_projects_list(){
 	if (xhr.readyState ==4 && xhr.status == "200"){
 	    console.table(projects);
 	    for (item in projects){
-		projectselect.innerHTML += '<option value="'+projects[item].project_id+'">'+projects[item].project_name+'</option>';
+		projectselect.innerHTML += '<option value="'+item+'">'+projects[item].project_name+'</option>';
 	    }
 	}
 	else{
@@ -98,4 +100,24 @@ function load_projects_list(){
 
     xhr.send();
     return projects;
+}
+
+function open_project(project_to_open){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url+'/project/'+project_to_open, true);
+    xhr.onload = function(){
+	var pieces = JSON.parse(xhr.responseText);
+	if (xhr.readyState == 4 && xhr.status == "200") {
+	    console.table(pieces);
+	    placedPieces = pieces;
+	    nb_layers = projects[project_to_open].size_z;
+	    size_x = projects[project_to_open].size_x;
+	    size_y = projects[project_to_open].size_y;
+	}
+	else {
+	    console.error(pieces);
+	}
+    }
+    
+    xhr.send();
 }
