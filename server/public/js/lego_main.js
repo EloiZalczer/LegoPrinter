@@ -12,8 +12,6 @@ var layers_colors = ["red", "blue", "green"];
 
 var layout = {height: size_y, width: size_x, layers: nb_layers};
 
-var pieces = [{sizeX: 1, sizeY: 1}, {sizeX: 1, sizeY: 2}, {sizeX: 2, sizeY: 2}];
-
 var currentPiece = 0;
 
 var rotatePiece = 0;
@@ -185,49 +183,49 @@ function  getMousePos(evt) {
 
 
 function getBlockParams(posX, posY){
-	posY = Math.trunc(posY*(layout.height/canvas.height));
-	posX = Math.trunc(posX*(layout.width/canvas.width));
-	sizeX = 1;
-	sizeY = 1;
-	switch(rotatePiece){
-		case 0:
-			posY = posY-pieces[currentPiece].sizeY + 1;
-			sizeX = pieces[currentPiece].sizeX;
-			sizeY = pieces[currentPiece].sizeY;
-			break;
-		case 1:
-			sizeX = pieces[currentPiece].sizeY;
-			sizeY = pieces[currentPiece].sizeX;
-			break;
-		case 2:
-			posX = posX-pieces[currentPiece].sizeX + 1;
-			sizeX = pieces[currentPiece].sizeX;
-			sizeY = pieces[currentPiece].sizeY;
-			break;
-		case 3:
-			posY = posY-pieces[currentPiece].sizeX + 1;
-			posX = posX-pieces[currentPiece].sizeY + 1;
-			sizeX = pieces[currentPiece].sizeY;
-			sizeY = pieces[currentPiece].sizeX;
-			break;
-		default:
-			break;
-	}
-	posX = posX*(canvas.width/layout.width);
-	posY = posY*(canvas.height/layout.height);
-	if(posX>(canvas.width-(canvas.width/layout.width)*sizeX)){
-		posX = posX-canvas.width/layout.width;
-	}
-	else if(posX<0){
-		posX = posX+canvas.width/layout.width;
-	}
-	if(posY>(canvas.height-(canvas.height/layout.height)*sizeY)){
-		posY = posY-canvas.height/layout.height;
-	}
-	else if(posY<0){
-		posY = posY+canvas.height/layout.height;
-	}
-	return({posX: posX, posY: posY, posZ: current_layer, sizeX: sizeX, sizeY: sizeY});
+    posY = Math.trunc(posY*(layout.height/canvas.height));
+    posX = Math.trunc(posX*(layout.width/canvas.width));
+    var sizeX;
+    var sizeY;
+    switch(rotatePiece){
+    case 0:
+	posY = posY-pieces[currentPiece].size_y + 1;
+	sizeX = pieces[currentPiece].size_y;
+	sizeY = pieces[currentPiece].size_y;
+	break;
+    case 1:
+	sizeX = pieces[currentPiece].size_y;
+	sizeY = pieces[currentPiece].size_x;
+	break;
+    case 2:
+	posX = posX-pieces[currentPiece].size_x + 1;
+	sizeX = pieces[currentPiece].size_x;
+	sizeY = pieces[currentPiece].size_x;
+	break;
+    case 3:
+	posY = posY-pieces[currentPiece].size_x + 1;
+	posX = posX-pieces[currentPiece].size_y + 1;
+	sizeX = pieces[currentPiece].size_y;
+	sizeY = pieces[currentPiece].size_x;
+	break;
+    default:
+	break;
+    }
+    posX = posX*(canvas.width/layout.width);
+    posY = posY*(canvas.height/layout.height);
+    if(posX>(canvas.width-(canvas.width/layout.width)*sizeX)){
+	posX = posX-canvas.width/layout.width;
+    }
+    else if(posX<0){
+	posX = posX+canvas.width/layout.width;
+    }
+    if(posY>(canvas.height-(canvas.height/layout.height)*sizeY)){
+	posY = posY-canvas.height/layout.height;
+    }
+    else if(posY<0){
+	posY = posY+canvas.height/layout.height;
+    }
+    return({posX: posX, posY: posY, posZ: current_layer, sizeX: sizeX, sizeY: sizeY});
 }
 
 /*
@@ -306,7 +304,6 @@ function addPiece(e){
 	var pos = getMousePos(e);
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 		placedPieces.push(getBlockParams(pos.x, pos.y));
-		alert(placedPieces[placedPieces.length-1].posX);
 	}
 }
 

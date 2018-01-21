@@ -8,13 +8,12 @@ function saveModel()
     save_model.onclick = function(){
 	edit=0;
 	alert('Sauvegarde en cours');
-	var url = "http://192.168.1.97:3000/tasks";
-
+	
 	var json = JSON.stringify(placedPieces);
 	console.log(json)
 	
 	var xhr = new XMLHttpRequest();
-	xhr.open("PUT", url+'/1', true);
+	xhr.open("PUT", url+'/project/1', true);
 	xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
 	xhr.onload = function () {
 	    var users = JSON.parse(xhr.responseText);
