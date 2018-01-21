@@ -38,8 +38,9 @@ exports.open_project = function(req, res) {
 	    res.statusCode = 500;
 	    return res.json({errors: ['Could not open project'] });
 	}
-	res.statusCode = 201;
-	return res.json(results);
+	res.statusCode = 200;
+	console.log(results.rows);
+	return res.json(results.rows);
     });
 };
 

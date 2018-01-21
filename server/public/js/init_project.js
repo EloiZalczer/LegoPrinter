@@ -46,7 +46,7 @@ function start_project(){
 		    info("Open existing project");
 		    var projectselect = document.getElementById('projectselect');
 		    var project_to_open = projectselect.options[projectselect.selectedIndex].value;
-		    open_project(project_to_open);
+		    open_existing_project(project_to_open);
 		}
 		else{
 			valid=0;
@@ -55,6 +55,7 @@ function start_project(){
 			open_project.remove();
 			start_overlay.remove();
 			var user_canvas = document.getElementById('user_canvas');
+			alert(nb_layers);
 			for(var i=0;i<nb_layers;i++){
 				user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+size_x*block_size+'" height="'+size_y*block_size+'">\n</canvas>\n';
 			}
@@ -80,39 +81,38 @@ function start_project(){
 function load_projects_list(){
     info('Chargement des projets');
 
-    var projects;
-
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url+'/project', true);
     xhr.onload = function() {
-	projects = JSON.parse(xhr.responseText);
+	projects_list = JSON.parse(xhr.responseText);
 	var projectselect = document.getElementById("projectselect");
-	if (xhr.readyState ==4 && xhr.status == "200"){
-	    console.table(projects);
-	    for (item in projects){
-		projectselect.innerHTML += '<option value="'+item+'">'+projects[item].project_name+'</option>';
+	if (xhr.readyState == 4 && xhr.status == "200"){
+	    console.table(projects_list);
+	    for (item in projects_list){
+		projectselect.innerHTML += '<option value="'+item+'">'+projects_list[item].project_name+'</option>';
 	    }
 	}
 	else{
 	    console.error(projects);
 	}
+	return 0;
     }
 
     xhr.send();
-    return projects;
 }
 
-function open_project(project_to_open){
+function open_existing_project(project_to_open){
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url+'/project/'+project_to_open, true);
+    xhr.open("GET", url+'/project/'+projects_list[project_to_open].project_id, true);
+    console.log(project_to_open);
     xhr.onload = function(){
 	var pieces = JSON.parse(xhr.responseText);
 	if (xhr.readyState == 4 && xhr.status == "200") {
 	    console.table(pieces);
 	    placedPieces = pieces;
-	    nb_layers = projects[project_to_open].size_z;
-	    size_x = projects[project_to_open].size_x;
-	    size_y = projects[project_to_open].size_y;
+	    nb_layers = projects_list[project_to_open].size_z;
+	    size_x = projects_list[project_to_open].size_x;
+	    size_y = projects_list[project_to_open].size_y;
 	}
 	else {
 	    console.error(pieces);
