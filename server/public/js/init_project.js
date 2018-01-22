@@ -30,52 +30,16 @@ function checkNumber(mode, value){
 }
 
 function start_project(){
-		var valid=1;
-		if(create_project.checked==true){
-			size_x=document.getElementById('size_x').value;
-			size_y=document.getElementById('size_y').value;
-			nb_layers=document.getElementById('size_z').value;
-			new_project_name=document.getElementById('new_project_name').value;
-			if(checkNumber(0, size_x)==false || checkNumber(0, size_y)==false || checkNumber(1, nb_layers)==false){
-				valid=0;
-				var error=document.getElementById('error');
-				error.innerHTML="Paramètres invalides";
-			}
-		}
-		else if(existing_project.checked==true){
-		    info("Open existing project");
-		    var projectselect = document.getElementById('projectselect');
-		    var project_to_open = projectselect.options[projectselect.selectedIndex].value;
-		    open_existing_project(project_to_open);
-		}
-		else{
-			valid=0;
-		}
-		if(valid==1){
-			open_project.remove();
-			start_overlay.remove();
-			var user_canvas = document.getElementById('user_canvas');
-			alert(nb_layers);
-			for(var i=0;i<nb_layers;i++){
-				user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+size_x*block_size+'" height="'+size_y*block_size+'">\n</canvas>\n';
-			}
-			for(var i=0;i<nb_layers;i++){
-				var id = "layer_" + i;
-				layers_canvas.push(document.getElementById(id));
-				layers_context.push(layers_canvas[i].getContext('2d'));
-			}
-			canvas = document.getElementById('layout_canvas');
-			canvas_overlay = document.getElementById('overlay');
-			canvas_background = document.getElementById('background');
-			canvas.width=size_x*block_size;
-			canvas.height=size_y*block_size;
-			canvas_overlay.width=size_x*block_size;
-			canvas_overlay.height=size_y*block_size;
-			canvas_background.width=size_x*block_size;
-			canvas_background.height=size_y*block_size;
-		    document.title=new_project_name;
-		    edit=1;
-		}
+    if(create_project.checked==true){
+	
+	
+    }
+    else if(existing_project.checked==true){
+	info("Open existing project");
+	var projectselect = document.getElementById('projectselect');
+	var project_to_open = projectselect.options[projectselect.selectedIndex].value;
+	open_existing_project(project_to_open);
+    }
 }
 
 function load_projects_list(){
@@ -113,6 +77,7 @@ function open_existing_project(project_to_open){
 	    nb_layers = projects_list[project_to_open].size_z;
 	    size_x = projects_list[project_to_open].size_x;
 	    size_y = projects_list[project_to_open].size_y;
+	    start_editor();
 	}
 	else {
 	    console.error(pieces);
@@ -120,4 +85,60 @@ function open_existing_project(project_to_open){
     }
     
     xhr.send();
+}
+
+function start_editor(){
+    open_project.remove();
+    start_overlay.remove();
+    var user_canvas = document.getElementById('user_canvas');
+    alert(nb_layers);
+    for(var i=0;i<nb_layers;i++){
+	user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+size_x*block_size+'" height="'+size_y*block_size+'">\n</canvas>\n';
+    }
+    for(var i=0;i<nb_layers;i++){
+	var id = "layer_" + i;
+	layers_canvas.push(document.getElementById(id));
+	layers_context.push(layers_canvas[i].getContext('2d'));
+    }
+    canvas = document.getElementById('layout_canvas');
+    canvas_overlay = document.getElementById('overlay');
+    canvas_background = document.getElementById('background');
+    canvas.width=size_x*block_size;
+    canvas.height=size_y*block_size;
+    canvas_overlay.width=size_x*block_size;
+    canvas_overlay.height=size_y*block_size;
+    canvas_background.width=size_x*block_size;
+    canvas_background.height=size_y*block_size;
+    document.title=new_project_name;
+    edit=1;
+}
+
+function create_new_project(){
+
+    size_x=document.getElementById('size_x').value;
+    size_y=document.getElementById('size_y').value;
+    nb_layers=document.getElementById('size_z').value;
+    new_project_name=document.getElementById('new_project_name').value;
+    if(checkNumber(0, size_x)==false || checkNumber(0, size_y)==false || checkNumber(1, nb_layers)==false){
+	valid=0;
+	var error=document.getElementById('error');
+	error.innerHTML="Paramètres invalides";
+	return 0;
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url+'/project', true);
+
+    var json = JSON.stringify({project_name: new_project_name, size_x: size_x, size_y: size_y, size_z: nb_layers});
+    
+    xhr.onload = function(){
+	var project = JSON.parse(xhr.responseText);
+	if (xhr.readyState == 4 && xhr.status == "201") {
+	    start_editor();
+	}
+	else {
+	    console.error(project);
+	}
+    }
+    
+    xhr.send(json);
 }

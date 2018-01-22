@@ -18,7 +18,7 @@ exports.list_projects = function(req, res) {
 
 exports.create_project = function(req, res) {
     var sql = 'INSERT INTO PROJECT (project_name, last_modified, size_x, size_y, size_z) VALUES ($1, $2, $3, $4, $5)';
-    pg.client.query(sql, [ req.params.project_name, new Date(), req.params.size_x, req.params.size_y, req.params.size_z ], function(err, results){
+    pg.client.query(sql, [ req.body.project_name, new Date(), req.body.size_x, req.body.size_y, req.body.size_z ], function(err, results){
 	if(err){
 	    console.error(err);
 	    res.statusCode = 500;
@@ -69,9 +69,18 @@ exports.save_project = function(req, res) {
 	    res.statusCode = 500;
 	    return res.json({errors: ['Could not save project'] });
 	}
+	
+    });
+    sql = 'UPDATE PROJECT SET last_modification = '+new Date()+ ' WHERE project_id = $1';
+    pg.client.query(sql, [ req.params.project_id ], function(err, results){
+	if(err){
+	    console.error(err);
+	    res.statusCode = 500;
+	    return res.json({errors: ['Could not save project'] });
+	}
 	res.statusCode = 200;
 	return res.json(results);
-    })
+    });
 };
 
 
