@@ -115,6 +115,7 @@ function start_editor(){
     edit=1;
     layout = {height: size_y, width: size_x, layers: nb_layers}
     load_canvas();
+    return 0;
 }
 
 function create_new_project(){
