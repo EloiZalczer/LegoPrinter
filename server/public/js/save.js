@@ -13,7 +13,7 @@ function saveModel()
 	console.log(json)
 	
 	var xhr = new XMLHttpRequest();
-	xhr.open("PUT", url+'/project/1', true);
+	xhr.open("PUT", '/project/'+project_id, true);
 	xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
 	xhr.onload = function () {
 	    var users = JSON.parse(xhr.responseText);

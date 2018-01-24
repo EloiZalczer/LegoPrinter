@@ -10,7 +10,7 @@ var mode = 0;
 
 var layers_colors = ["red", "blue", "green"];
 
-var layout = {height: size_y, width: size_x, layers: nb_layers};
+var layout;
 
 var currentPiece = 0;
 
@@ -20,8 +20,8 @@ window.onload = function(){
     var validate_open_project = document.getElementById('validate_open_project');
     current_layer_div = document.getElementById('current_layer');
     validate_open_project.onclick=function(){
-	layout = {height: size_y, width: size_x, layers: nb_layers}
-	load_canvas();
+	//layout = {height: size_y, width: size_x, layers: nb_layers}
+	//load_canvas();
 	layer_buttons();
 	blockSelectButtons();
 	modeSelectButton();

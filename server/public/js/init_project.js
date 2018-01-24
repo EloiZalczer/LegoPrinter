@@ -30,9 +30,9 @@ function checkNumber(mode, value){
 }
 
 function start_project(){
-    if(create_project.checked==true){
-	
-	
+    if(create_project.checked==true){	
+	info("Create new project");
+	create_new_project();
     }
     else if(existing_project.checked==true){
 	info("Open existing project");
@@ -46,7 +46,7 @@ function load_projects_list(){
     info('Chargement des projets');
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url+'/project', true);
+    xhr.open("GET", '/project', true);
     xhr.onload = function() {
 	projects_list = JSON.parse(xhr.responseText);
 	var projectselect = document.getElementById("projectselect");
@@ -67,7 +67,7 @@ function load_projects_list(){
 
 function open_existing_project(project_to_open){
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url+'/project/'+projects_list[project_to_open].project_id, true);
+    xhr.open("GET", '/project/'+projects_list[project_to_open].project_id, true);
     console.log(project_to_open);
     xhr.onload = function(){
 	var pieces = JSON.parse(xhr.responseText);
@@ -77,6 +77,8 @@ function open_existing_project(project_to_open){
 	    nb_layers = projects_list[project_to_open].size_z;
 	    size_x = projects_list[project_to_open].size_x;
 	    size_y = projects_list[project_to_open].size_y;
+	    project_id = projects_list[project_to_open].project_id;
+	    project_name = projects_list[project_to_open].project_name;
 	    start_editor();
 	}
 	else {
@@ -109,8 +111,10 @@ function start_editor(){
     canvas_overlay.height=size_y*block_size;
     canvas_background.width=size_x*block_size;
     canvas_background.height=size_y*block_size;
-    document.title=new_project_name;
+    document.title=project_name;
     edit=1;
+    layout = {height: size_y, width: size_x, layers: nb_layers}
+    load_canvas();
 }
 
 function create_new_project(){
@@ -118,7 +122,7 @@ function create_new_project(){
     size_x=document.getElementById('size_x').value;
     size_y=document.getElementById('size_y').value;
     nb_layers=document.getElementById('size_z').value;
-    new_project_name=document.getElementById('new_project_name').value;
+    project_name=document.getElementById('new_project_name').value;
     if(checkNumber(0, size_x)==false || checkNumber(0, size_y)==false || checkNumber(1, nb_layers)==false){
 	valid=0;
 	var error=document.getElementById('error');
@@ -126,13 +130,19 @@ function create_new_project(){
 	return 0;
     }
     var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url+'/project', true);
+    xhr.open("PUT", '/project', true);
 
-    var json = JSON.stringify({project_name: new_project_name, size_x: size_x, size_y: size_y, size_z: nb_layers});
+    var new_project_data={project_name: project_name, size_x: size_x, size_y: size_y, size_z: nb_layers};
+
+    var json = JSON.stringify(new_project_data);
+    console.log(json);
+    
+    xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
     
     xhr.onload = function(){
 	var project = JSON.parse(xhr.responseText);
 	if (xhr.readyState == 4 && xhr.status == "201") {
+	    project_id = project.results.project_id;
 	    start_editor();
 	}
 	else {

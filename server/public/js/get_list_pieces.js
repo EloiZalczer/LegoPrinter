@@ -14,7 +14,7 @@ function load_pieces(){
     edit=0;
     info('Chargement des pièces');
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url+'/pieces', true);
+    xhr.open("GET", '/pieces', true);
     xhr.onload = function () {
 	var get_pieces = JSON.parse(xhr.responseText);
 	var blockselect = document.getElementById('blockselect');
