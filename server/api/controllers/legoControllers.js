@@ -72,7 +72,7 @@ exports.save_project = function(req, res) {
     console.log(req.params.project_id);
     for (var item in req.body){
 	console.log(req.body[item]);
-	sql+='('+req.params.project_id+', '+req.body[item].type+', '+req.body[item].orientation+', '+req.body[item].posx+', '+req.body[item].posy+', '+req.body[item].posz+'),';
+	sql+='('+req.params.project_id+', '+req.body[item].type+', '+req.body[item].posx+', '+req.body[item].posy+', '+req.body[item].posz+'),';
     }
     sql = sql.slice(0, -1);
     sql+=';';

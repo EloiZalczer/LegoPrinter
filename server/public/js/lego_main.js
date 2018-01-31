@@ -113,10 +113,8 @@ function load_canvas()
     display_layout();
     if(placedPieces.length>0){
         for(var i=0;i<placedPieces.length;i++){
-	    rotatePiece=placedPieces[i].orientation;
-	    currentPiece=pieces.findIndex(function(element){
-		return element=placedPieces[i].type;
-	    });
+	    rotatePiece=1;
+	    currentPiece = pieces.map(function(x) {return x.type; }).indexOf(placedPieces[i].type);
             pos={x: placedPieces[i].posx+5, y: placedPieces[i].posy+5};
             placeLegoGraph(pos);
         }
@@ -236,7 +234,7 @@ function getBlockParams(posx, posy){
     else if(posy<0){
 	posy = posy+canvas.height/layout.height;
     }
-    return({posx: posx, posy: posy, posz: current_layer, sizeX: sizeX, sizeY: sizeY, type: pieces[currentPiece].type, orientation: rotatePiece});
+    return({posx: posx, posy: posy, posz: current_layer, sizeX: sizeX, sizeY: sizeY, type: pieces[currentPiece].type});
 }
 
 /*
