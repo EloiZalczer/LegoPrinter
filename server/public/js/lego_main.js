@@ -200,24 +200,24 @@ function getBlockParams(posx, posy){
     var sizey;
     switch(rotatePiece){
     case 0:
-	posy = posy-pieces[currentPiece].size_y + 1;
-	sizex = pieces[currentPiece].size_x;
-	sizey = pieces[currentPiece].size_y;
+	posy = posy-pieces[currentPiece].sizey + 1;
+	sizex = pieces[currentPiece].sizex;
+	sizey = pieces[currentPiece].sizey;
 	break;
     case 1:
-	sizex = pieces[currentPiece].size_y;
-	sizey = pieces[currentPiece].size_x;
+	sizex = pieces[currentPiece].sizey;
+	sizey = pieces[currentPiece].sizex;
 	break;
     case 2:
-	posx = posx-pieces[currentPiece].size_x + 1;
-	sizex = pieces[currentPiece].size_x;
-	sizey = pieces[currentPiece].size_y;
+	posx = posx-pieces[currentPiece].sizex + 1;
+	sizex = pieces[currentPiece].sizex;
+	sizey = pieces[currentPiece].sizey;
 	break;
     case 3:
-	posy = posy-pieces[currentPiece].size_x + 1;
-	posx = posx-pieces[currentPiece].size_y + 1;
-	sizex = pieces[currentPiece].size_y;
-	sizey = pieces[currentPiece].size_x;
+	posy = posy-pieces[currentPiece].sizex + 1;
+	posx = posx-pieces[currentPiece].sizey + 1;
+	sizex = pieces[currentPiece].sizey;
+	sizey = pieces[currentPiece].sizex;
 	break;
     default:
 	break;
