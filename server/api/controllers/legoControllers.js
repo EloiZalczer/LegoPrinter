@@ -41,7 +41,7 @@ exports.create_project = function(req, res) {
 
 
 exports.open_project = function(req, res) {
-    var sql = 'SELECT * FROM PLACED_PIECES WHERE project_id = $1';
+    var sql = 'SELECT * FROM PLACED_PIECES, PIECES WHERE project_id = $1 AND PLACED_PIECES.type=PIECES.type';
     pg.client.query(sql, [ req.params.project_id ], function(err, results){
 	if(err){
 	    console.error(err);
