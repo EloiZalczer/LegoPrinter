@@ -17,11 +17,11 @@ exports.list_projects = function(req, res) {
 
 
 exports.create_project = function(req, res) {
-    var sql = "INSERT INTO PROJECT (project_name, last_modified, size_x, size_y, size_z) VALUES ($1, $2, $3, $4, $5)";
+    var sql = "INSERT INTO PROJECT (project_name, last_modified, sizex, sizey, size_z) VALUES ($1, $2, $3, $4, $5)";
     console.log(req.body.project_name);
-    pg.client.query(sql, [ req.body.project_name, new Date(), req.body.size_x, req.body.size_y, req.body.size_z ], function(err, results){
+    pg.client.query(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.size_z ], function(err, results){
 	if(err){
-	    //console.log(sql, [ req.body.project_name, new Date(), req.body.size_x, req.body.size_y, req.body.size_z ]);
+	    //console.log(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.size_z ]);
 	    console.error(err);
 	    res.statusCode = 500;
 	    return res.json({errors: ['Could not create project'] });
