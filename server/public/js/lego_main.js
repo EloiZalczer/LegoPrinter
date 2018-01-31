@@ -290,16 +290,29 @@ function legoClick(e){
 function checkPiece(e){
 	var pos = getMousePos(e);
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
-		if(current_layer==1){return 1;}
+	    if(current_layer>1){
+		var valid=0;
 		for(i=0;i<placedPieces.length;i++){
-			piece=placedPieces[i];
-			if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer-1){
-				return 1;
-			}
+		    piece=placedPieces[i];
+		    if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer-1){
+			valid=1;
+			break;
+		    }
 		}
-		return 2;
-	}	
-	return 0;
+		if(valid==0){
+		    return 2;
+		}
+	    }
+	    for(i=0;i<placedPieces.length;i++){
+		piece=placedPieces[i];
+		if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer){
+		    return 2;
+		}
+	    }
+	    return 1;
+	}
+    
+    return 0;
 }
 
 function placeLegoGraph(pos){
