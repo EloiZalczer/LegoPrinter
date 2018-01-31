@@ -1,3 +1,7 @@
+/*
+GLOBAL VARIABLES
+*/
+
 var canvas = 0;
 var context = 0;
 var canvas_overlay = 0;
@@ -20,8 +24,6 @@ window.onload = function(){
     var validate_open_project = document.getElementById('validate_open_project');
     current_layer_div = document.getElementById('current_layer');
     validate_open_project.onclick=function(){
-	//layout = {height: size_y, width: size_x, layers: nb_layers}
-	//load_canvas();
 	layer_buttons();
 	blockSelectButtons();
 	modeSelectButton();
@@ -165,15 +167,15 @@ window.addEventListener('mousemove', mouse_hover, false);
 function mouse_hover_add(x, y){
 	context_overlay.fillStyle = "#000000";
 	params = getBlockParams(x, y);
-	context_overlay.fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizeX, (canvas.height/layout.height)*params.sizeY);
+	context_overlay.fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 }
 
 function mouse_hover_remove(x, y){
 	for(i=0;i<placedPieces.length;i++){
 		piece=placedPieces[i];
-		if(piece.posx<x && piece.posx+(piece.sizeX*(canvas.width/layout.width))>x && piece.posy<y && piece.posy+(piece.sizeY*(canvas.height/layout.height))>y && piece.posz==current_layer){
+		if(piece.posx<x && piece.posx+(piece.sizex*(canvas.width/layout.width))>x && piece.posy<y && piece.posy+(piece.sizey*(canvas.height/layout.height))>y && piece.posz==current_layer){
 			context_overlay.fillStyle = "#000000";
-			context_overlay.fillRect(piece.posx, piece.posy, (canvas.width/layout.width)*piece.sizeX, (canvas.height/layout.height)*piece.sizeY);
+			context_overlay.fillRect(piece.posx, piece.posy, (canvas.width/layout.width)*piece.sizex, (canvas.height/layout.height)*piece.sizey);
 			break;
 		}
 	}
@@ -194,47 +196,47 @@ function  getMousePos(evt) {
 function getBlockParams(posx, posy){
     posy = Math.trunc(posy*(layout.height/canvas.height));
     posx = Math.trunc(posx*(layout.width/canvas.width));
-    var sizeX;
-    var sizeY;
+    var sizex;
+    var sizey;
     switch(rotatePiece){
     case 0:
 	posy = posy-pieces[currentPiece].size_y + 1;
-	sizeX = pieces[currentPiece].size_x;
-	sizeY = pieces[currentPiece].size_y;
+	sizex = pieces[currentPiece].size_x;
+	sizey = pieces[currentPiece].size_y;
 	break;
     case 1:
-	sizeX = pieces[currentPiece].size_y;
-	sizeY = pieces[currentPiece].size_x;
+	sizex = pieces[currentPiece].size_y;
+	sizey = pieces[currentPiece].size_x;
 	break;
     case 2:
 	posx = posx-pieces[currentPiece].size_x + 1;
-	sizeX = pieces[currentPiece].size_x;
-	sizeY = pieces[currentPiece].size_y;
+	sizex = pieces[currentPiece].size_x;
+	sizey = pieces[currentPiece].size_y;
 	break;
     case 3:
 	posy = posy-pieces[currentPiece].size_x + 1;
 	posx = posx-pieces[currentPiece].size_y + 1;
-	sizeX = pieces[currentPiece].size_y;
-	sizeY = pieces[currentPiece].size_x;
+	sizex = pieces[currentPiece].size_y;
+	sizey = pieces[currentPiece].size_x;
 	break;
     default:
 	break;
     }
     posx = posx*(canvas.width/layout.width);
     posy = posy*(canvas.height/layout.height);
-    if(posx>(canvas.width-(canvas.width/layout.width)*sizeX)){
+    if(posx>(canvas.width-(canvas.width/layout.width)*sizex)){
 	posx = posx-canvas.width/layout.width;
     }
     else if(posx<0){
 	posx = posx+canvas.width/layout.width;
     }
-    if(posy>(canvas.height-(canvas.height/layout.height)*sizeY)){
+    if(posy>(canvas.height-(canvas.height/layout.height)*sizey)){
 	posy = posy-canvas.height/layout.height;
     }
     else if(posy<0){
 	posy = posy+canvas.height/layout.height;
     }
-    return({posx: posx, posy: posy, posz: current_layer, sizeX: sizeX, sizeY: sizeY, type: pieces[currentPiece].type});
+    return({posx: posx, posy: posy, posz: current_layer, sizex: sizex, sizey: sizey, type: pieces[currentPiece].type});
 }
 
 /*
@@ -291,7 +293,7 @@ function checkPiece(e){
 		if(current_layer==1){return 1;}
 		for(i=0;i<placedPieces.length;i++){
 			piece=placedPieces[i];
-			if(piece.posx<pos.x && piece.posx+(piece.sizeX*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizeY*(canvas.height/layout.height))>pos.y && piece.posz==current_layer-1){
+			if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer-1){
 				return 1;
 			}
 		}
@@ -306,7 +308,7 @@ function placeLegoGraph(pos){
 		layers_context[current_layer-1].fillStyle = layers_colors[current_layer-1];
 		posy = Math.trunc(pos.y*(layout.height/canvas.height))*(canvas.height/layout.height);
 		posx = Math.trunc(pos.x*(layout.width/canvas.width))*(canvas.width/layout.width);
-		layers_context[current_layer-1].fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizeX, (canvas.height/layout.height)*params.sizeY);
+		layers_context[current_layer-1].fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 	}
 }
 
@@ -320,8 +322,8 @@ function removePiece(e){
 	var pos = getMousePos(e);
 	for(i=0;i<placedPieces.length;i++){
 		piece=placedPieces[i];
-		if(piece.posx<pos.x && piece.posx+(piece.sizeX*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizeY*(canvas.height/layout.height))>pos.y && piece.posz==current_layer){
-			layers_context[piece.posz-1].clearRect(piece.posx, piece.posy, (canvas.width/layout.width)*piece.sizeX, (canvas.height/layout.height)*piece.sizeY);
+		if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer){
+			layers_context[piece.posz-1].clearRect(piece.posx, piece.posy, (canvas.width/layout.width)*piece.sizex, (canvas.height/layout.height)*piece.sizey);
 			placedPieces.splice(i, 1);
 			break;
 		}
