@@ -75,8 +75,8 @@ function open_existing_project(project_to_open){
 	    console.table(pieces);
 	    placedPieces = pieces;
 	    nb_layers = projects_list[project_to_open].size_z;
-	    size_x = projects_list[project_to_open].size_x;
-	    size_y = projects_list[project_to_open].size_y;
+	    sizex = projects_list[project_to_open].sizex;
+	    sizey = projects_list[project_to_open].sizey;
 	    project_id = projects_list[project_to_open].project_id;
 	    project_name = projects_list[project_to_open].project_name;
 	    start_editor();
@@ -95,7 +95,7 @@ function start_editor(){
     var user_canvas = document.getElementById('user_canvas');
     alert(nb_layers);
     for(var i=0;i<nb_layers;i++){
-	user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+size_x*block_size+'" height="'+size_y*block_size+'">\n</canvas>\n';
+	user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+sizex*block_size+'" height="'+sizey*block_size+'">\n</canvas>\n';
     }
     for(var i=0;i<nb_layers;i++){
 	var id = "layer_" + i;
@@ -108,26 +108,26 @@ function start_editor(){
     canvas = document.getElementById('layout_canvas');
     canvas_overlay = document.getElementById('overlay');
     canvas_background = document.getElementById('background');
-    canvas.width=size_x*block_size;
-    canvas.height=size_y*block_size;
-    canvas_overlay.width=size_x*block_size;
-    canvas_overlay.height=size_y*block_size;
-    canvas_background.width=size_x*block_size;
-    canvas_background.height=size_y*block_size;
+    canvas.width=sizex*block_size;
+    canvas.height=sizey*block_size;
+    canvas_overlay.width=sizex*block_size;
+    canvas_overlay.height=sizey*block_size;
+    canvas_background.width=sizex*block_size;
+    canvas_background.height=sizey*block_size;
     document.title=project_name;
     edit=1;
-    layout = {height: size_y, width: size_x, layers: nb_layers}
+    layout = {height: sizey, width: sizex, layers: nb_layers}
     load_canvas();
     return 0;
 }
 
 function create_new_project(){
 
-    size_x=document.getElementById('size_x').value;
-    size_y=document.getElementById('size_y').value;
+    sizex=document.getElementById('sizex').value;
+    sizey=document.getElementById('sizey').value;
     nb_layers=document.getElementById('size_z').value;
     project_name=document.getElementById('new_project_name').value;
-    if(checkNumber(0, size_x)==false || checkNumber(0, size_y)==false || checkNumber(1, nb_layers)==false){
+    if(checkNumber(0, sizex)==false || checkNumber(0, sizey)==false || checkNumber(1, nb_layers)==false){
 	valid=0;
 	var error=document.getElementById('error');
 	error.innerHTML="Paramètres invalides";
@@ -136,7 +136,7 @@ function create_new_project(){
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", '/project', true);
 
-    var new_project_data={project_name: project_name, size_x: size_x, size_y: size_y, size_z: nb_layers};
+    var new_project_data={project_name: project_name, sizex: sizex, sizey: sizey, size_z: nb_layers};
 
     var json = JSON.stringify(new_project_data);
     console.log(json);
