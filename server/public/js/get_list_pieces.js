@@ -1,9 +1,9 @@
 
-function piecesConstructor(type, color, size_x, size_y){
+function piecesConstructor(type, color, sizex, sizey){
     this.type=type;
     this.color=color;
-    this.size_x=size_x;
-    this.size_y=size_y;
+    this.sizex=sizex;
+    this.sizey=sizey;
 }
 
 window.addEventListener("load",function(){
@@ -23,8 +23,8 @@ function load_pieces(){
 	    var i=0;
 	    for (piece in get_pieces)
 	    {
-		pieces.push(new piecesConstructor(get_pieces[piece].type, get_pieces[piece].color, get_pieces[piece].size_x, get_pieces[piece].size_y));
-		blockselect.innerHTML += '<option value="'+i+'">'+get_pieces[piece].size_x+'x'+get_pieces[piece].size_y+'</option>';
+		pieces.push(new piecesConstructor(get_pieces[piece].type, get_pieces[piece].color, get_pieces[piece].sizex, get_pieces[piece].sizey));
+		blockselect.innerHTML += '<option value="'+i+'">'+get_pieces[piece].sizex+'x'+get_pieces[piece].sizey+'</option>';
 		i++;
 	    }
 	} else {
