@@ -256,7 +256,10 @@ function legoClick(e){
 			addPiece(pos);
 		    }
 		    else if(ret==2){
-			alert("Impossible de placer une pièce ici : aucune pièce en-dessous");
+		    alert("Aucune pièce en-dessous");
+		    }
+		    else if(ret==3){
+			alert("Chevauchement de pièces");
 		    }
 		}
 		else if(mode==1){
@@ -275,7 +278,10 @@ function legoClick(e){
 		    addPiece(pos);
 		}
 		else if(ret==2){
-		    alert("Impossible de placer une pièce ici : aucune pièce en-dessous");
+		    alert("Aucune pièce en-dessous");
+		}
+		else if(ret==3){
+		    alert("Chevauchement de pièces");
 		}
 	    }
 	    else if(mode==1){
@@ -288,29 +294,30 @@ function legoClick(e){
 
 
 function checkPiece(e){
-	var pos = getMousePos(e);
-	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
-	    if(current_layer>1){
-		var valid=0;
-		for(i=0;i<placedPieces.length;i++){
-		    piece=placedPieces[i];
-		    if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer-1){
-			valid=1;
-			break;
-		    }
-		}
-		if(valid==0){
-		    return 2;
-		}
-	    }
+    var pos = getMousePos(e);
+    var params = getBlockParams(pos.x, pos.y);
+    if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
+	if(current_layer>1){
+	    var valid=0;
 	    for(i=0;i<placedPieces.length;i++){
 		piece=placedPieces[i];
-		if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer){
-		    return 2;
+		if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer-1){
+		    valid=1;
+		    break;
 		}
 	    }
-	    return 1;
+	    if(valid==0){
+		return 2;
+	    }
 	}
+	for(i=0;i<placedPieces.length;i++){
+	    piece=placedPieces[i];
+	    if(params.posx<=piece.posx+(piece.sizex*(canvas.width/layout.width)) && params.posx+params.sizex>=piece.posx && params.posy<=piece.posy+(piece.sizey*(canvas.width/layout.width)) && params.posy+params.sizey>=piece.posy && piece.posz==current_layer){
+		return 3;
+	    }
+	}
+	return 1;
+    }
     
     return 0;
 }
