@@ -256,10 +256,10 @@ function legoClick(e){
 			addPiece(pos);
 		    }
 		    else if(ret==2){
-		    alert("Aucune pièce en-dessous");
+			info("Aucune pièce en-dessous");
 		    }
 		    else if(ret==3){
-			alert("Chevauchement de pièces");
+			info("Chevauchement de pièces");
 		    }
 		}
 		else if(mode==1){
@@ -278,10 +278,10 @@ function legoClick(e){
 		    addPiece(pos);
 		}
 		else if(ret==2){
-		    alert("Aucune pièce en-dessous");
+		    info("Aucune pièce en-dessous");
 		}
 		else if(ret==3){
-		    alert("Chevauchement de pièces");
+		    info("Chevauchement de pièces");
 		}
 	    }
 	    else if(mode==1){
@@ -364,6 +364,7 @@ function layer_buttons()
 		if(current_layer<nb_layers){
 		    current_layer++;
 		    current_layer_div.innerHTML=current_layer;
+		    layers_context[current_layer-1].globalAlpha=1;
 		}
 		else{
 			alert("There are only "+nb_layers+" layers");
@@ -372,8 +373,9 @@ function layer_buttons()
 
 	layer_down.onclick = function(){
 		if(current_layer>1){
-			current_layer--;
-			current_layer_div.innerHTML=current_layer;
+		    current_layer--;
+		    layers_context[current_layer-1].globalAlpha=0.3;
+		    current_layer_div.innerHTML=current_layer;
 		}
 		else{
 			alert("You can't go below layer 1");
