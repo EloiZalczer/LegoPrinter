@@ -115,7 +115,7 @@ function load_canvas()
     display_layout();
     if(placedPieces.length>0){
         for(var i=0;i<placedPieces.length;i++){
-	    rotatePiece=1;
+	    rotatePiece=placedPieces[i].orientation;
 	    currentPiece = pieces.map(function(x) {return x.type; }).indexOf(placedPieces[i].type);
             pos={x: placedPieces[i].posx+5, y: placedPieces[i].posy+5};
             placeLegoGraph(pos);
@@ -194,13 +194,13 @@ function  getMousePos(evt) {
 
 
 function getBlockParams(posx, posy){
-    posy = Math.trunc(posy*(layout.height/canvas.height));
-    posx = Math.trunc(posx*(layout.width/canvas.width));
+    var realposy = Math.trunc(posy*(layout.height/canvas.height));
+    var realposx = Math.trunc(posx*(layout.width/canvas.width));
     var sizex;
     var sizey;
     switch(rotatePiece){
     case 0:
-	posy = posy-pieces[currentPiece].sizey + 1;
+	posy = realposy-pieces[currentPiece].sizey + 1;
 	sizex = pieces[currentPiece].sizex;
 	sizey = pieces[currentPiece].sizey;
 	break;
@@ -209,13 +209,13 @@ function getBlockParams(posx, posy){
 	sizey = pieces[currentPiece].sizex;
 	break;
     case 2:
-	posx = posx-pieces[currentPiece].sizex + 1;
+	posx = realposx-pieces[currentPiece].sizex + 1;
 	sizex = pieces[currentPiece].sizex;
 	sizey = pieces[currentPiece].sizey;
 	break;
     case 3:
-	posy = posy-pieces[currentPiece].sizex + 1;
-	posx = posx-pieces[currentPiece].sizey + 1;
+	posy = realposy-pieces[currentPiece].sizex + 1;
+	posx = realposx-pieces[currentPiece].sizey + 1;
 	sizex = pieces[currentPiece].sizey;
 	sizey = pieces[currentPiece].sizex;
 	break;
@@ -224,6 +224,8 @@ function getBlockParams(posx, posy){
     }
     posx = posx*(canvas.width/layout.width);
     posy = posy*(canvas.height/layout.height);
+    realposx = realposx*(canvas.width/layout.width);
+    realposy = realposy*(canvas.height/layout.height);
     if(posx>(canvas.width-(canvas.width/layout.width)*sizex)){
 	posx = posx-canvas.width/layout.width;
     }
@@ -236,7 +238,7 @@ function getBlockParams(posx, posy){
     else if(posy<0){
 	posy = posy+canvas.height/layout.height;
     }
-    return({posx: posx, posy: posy, posz: current_layer, sizex: sizex, sizey: sizey, type: pieces[currentPiece].type});
+    return({posx: posx, posy: posy, posz: current_layer, realposx: realposx, realposy: realposy, sizex: sizex, sizey: sizey, type: pieces[currentPiece].type});
 }
 
 /*
@@ -334,7 +336,8 @@ function placeLegoGraph(pos){
 
 function addPiece(pos){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
-		placedPieces.push(getBlockParams(pos.x, pos.y));
+	    var params = getBlockParams(pos.x, pos.y);
+		placedPieces.push({posx: params.realposx, posy: params.realposy, pos_z: params.posz, sizex: params.sizex, sizey: params.sizey, type: params.type);
 	}
 }
 
