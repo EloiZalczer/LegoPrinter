@@ -56,10 +56,6 @@ exports.open_project = function(req, res) {
 
 
 exports.save_project = function(req, res) {
-    if(Object.keys(req.body).length === 0){
-	return res.json({warning: ['Nothing to save']});
-    }
-    console.log(req.body);
     var sql = 'DELETE FROM PLACED_PIECES WHERE project_id = $1';
     pg.client.query(sql, [ req.params.project_id ], function(err, results){
 	if(err){
@@ -68,6 +64,9 @@ exports.save_project = function(req, res) {
 	    return res.json({errors: ['Could not save project : deletion failed'] });
 	}
     });
+    if(Object.keys(req.body).length === 0){
+	return res.json({warning: ['Empty project']});
+    }
     sql = 'INSERT INTO PLACED_PIECES VALUES ';
     console.log(req.params.project_id);
     for (var item in req.body){

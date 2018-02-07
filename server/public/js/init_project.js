@@ -102,7 +102,7 @@ function start_editor(){
 	layers_canvas.push(document.getElementById(id));
 	layers_context.push(layers_canvas[i].getContext('2d'));
 	if(i>=1){
-	    layers_context[i].globalAlpha=0.3;
+	    layers_canvas[i].style.opacity=0.3;
 	}
     }
     canvas = document.getElementById('layout_canvas');

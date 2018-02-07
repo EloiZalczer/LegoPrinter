@@ -20,6 +20,9 @@ var currentPiece = 0;
 
 var rotatePiece = 0;
 
+//Au chargement de la page, on lance toutes les fonctions principales du programme.
+//Si on n'attend pas le window.onload, elles n'auront pas acces au DOM et planteront
+
 window.onload = function(){
     var validate_open_project = document.getElementById('validate_open_project');
     current_layer_div = document.getElementById('current_layer');
@@ -30,6 +33,9 @@ window.onload = function(){
 	window.addEventListener('click', legoClick, false);
     }
 }
+
+//On charge les canvas et les context depuis le DOM, puis on ajoute les pieces deja existantes dans le projet
+//Les canvas/context d'edition sont recuperes dans les tableaux layers_canvas/layers_context
 
 function load_canvas()
 
@@ -117,14 +123,16 @@ function load_canvas()
         for(var i=0;i<placedPieces.length;i++){
 	    rotatePiece=placedPieces[i].orientation;
 	    currentPiece = pieces.map(function(x) {return x.type; }).indexOf(placedPieces[i].type);
-            pos={x: placedPieces[i].posx+5, y: placedPieces[i].posy+5};
+            pos={x: placedPieces[i].posx, y: placedPieces[i].posy};
 	    current_layer=placedPieces[i].posz;
-	    alert("pos : "+placedPieces[i].posx);
             placeLegoGraph(pos);
         }
     }
+    current_layer=1;
 
 }
+
+//On affiche le layout de l'editeur sur le calque layout
 
 function display_layout(){
 	var radius = canvas.height/(layout.height*8);
@@ -151,6 +159,7 @@ function display_layout(){
 MOUSE MOVEMENT HANDLING
 */
 
+//Gestion des mouvements de la souris : en fonction du mode, on appelle mouse_hover_add ou mouse_hover_remove
 
 function mouse_hover(e){
 	var pos = getMousePos(e);
@@ -166,12 +175,18 @@ function mouse_hover(e){
 }
 window.addEventListener('mousemove', mouse_hover, false);
 
+//Gestion des mouvements de la souris en mode placement : on affiche la position de la piece sur le calque overlay.
+//Les parametres de la piece sont obtenus a partir de la fonction getBlockParams
+
 function mouse_hover_add(e){
 	var pos = getMousePos(e);
 	context_overlay.fillStyle = "#000000";
 	params = getBlockParams(pos.x, pos.y);
 	context_overlay.fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 }
+
+//Gestion des mouvements de la souris en mode suppression : si la souris est sur une piece, on la recouvre sur le calque overlay
+//Les parametres de la piece sous la souris sont obtenus avec la fonction placedBlockParams
 
 function mouse_hover_remove(e){
 	var pos = getMousePos(e);
@@ -181,6 +196,8 @@ function mouse_hover_remove(e){
 		context_overlay.fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 	}
 }
+
+//On recupere la position de la souris sur la canvas
 
 function  getMousePos(evt) {
   var rect = canvas.getBoundingClientRect(), // abs. size of element
@@ -193,6 +210,56 @@ function  getMousePos(evt) {
   }
 }
 
+//Fonction piecePosition : en fonction des donnees en entree, renvoie les parametres de la piece actuelle en fonction de l'orientation
+//Parametres : orientation (rotatePiece), position de la souris en x et en y, taille de la piece en x et en y
+//(depuis le tableau pieces) 
+
+//TODO : vraiment utile de retourner orientation ?
+
+function piecePosition(orientation, posx, posy, sizex, sizey){
+	
+	var ret={sizex: 0, sizey: 0, posx: 0, posy: 0};
+	switch(orientation){
+	case 0:
+            ret.sizex = sizex;
+            ret.sizey = sizey;
+	    ret.posx = posx;
+	    ret.posy = posy-sizey+1;
+            break;
+        case 1:
+	    ret.posx = posx;
+            ret.posy = posy;
+            ret.sizex = sizey;
+            ret.sizey = sizex;
+            break;
+        case 2:
+            ret.posx = posx-sizex + 1;
+	    ret.posy = posy;
+            ret.sizex = sizex;
+            ret.sizey = sizey;
+            break;
+        case 3:
+            ret.posy = posy-sizex + 1;
+            ret.posx = posx-sizey + 1;
+            ret.sizex = sizey;
+            ret.sizey = sizex;
+            break;
+        default:
+            break;
+        }
+	console.log(ret+" avec o : "+orientation+" pos : "+posx+":"+posy+" size : "+sizex+":"+sizey);
+	return ret;
+
+}
+
+//Fonction placedBlockParams : pour une position donnee en entree, renvoie les parametres d'une eventuelle piece en-dessous ou 0 sinon
+//Parametres : position de la souris en x et en y.
+//Si piece trouvee : renvoie l'indice de la piece concernee dans le tableau, sa position en x, y, z et sa taille en x et y
+//Sinon retourne 0
+//La fonction utilise piecePosition pour recuperer les parametres
+//ATTENTION : la position dans piecePosition est reduite (divisee par la taille d'une case) et arrondie.
+//La position renvoyee correspond a la position reelle de la piece
+
 function placedBlockParams(pos_x, pos_y){
 
 	if(placedPieces.length==0){
@@ -203,48 +270,29 @@ function placedBlockParams(pos_x, pos_y){
 
 	var posx;
 	var posy;
-	var sizex;
-	var sizey;
 
 	for(var i=0;i<placedPieces.length;i++){
 	piece=placedPieces[i];
-	posx = Math.trunc(piece.posx*(layout.width/canvas.width));
-	posy = Math.trunc(piece.posy*(layout.height/canvas.height));
-	switch(piece.orientation){
-	case 0:
-	    posx = posx;
-            posy = posy;
-            sizex = piece.sizex;
-            sizey = piece.sizey;
-            break;
-        case 1:
-	    posx = posx;
-	    posy = posy+piece.sizey-1;
-            sizex = piece.sizey;
-            sizey = piece.sizex;
-            break;
-        case 2:
-            posx = posx-piece.sizex + 1;
-	    posy = posy;
-            sizex = piece.sizex;
-            sizey = piece.sizey;
-            break;
-        case 3:
-            posy = posy-piece.sizex + 1;
-            posx = posx-piece.sizey + 1;
-            sizex = piece.sizey;
-            sizey = piece.sizex;
-            break;
-        default:
-            break;
-        }
+	var divw = (layout.width/canvas.width);
+	var divh = (layout.height/canvas.height);
+	posx = Math.trunc(piece.posx*divw);
+	posy = Math.trunc(piece.posy*divh);
+	if(posx>pos_x*divw+3 || posx<pos_x*divw-3 || posy>pos_y*divh+3 || posy<pos_y*divh-3 || piece.posz != current_layer){
+	    continue;
+	}
+	var position = piecePosition(piece.orientation, posx, posy, piece.sizex, piece.sizey);
+
+	posx=position.posx;
+	posy=position.posy;
+	var sizex=position.sizex;
+	var sizey=position.sizey;
 
 	console.log("pos : "+posx+":"+posy+"size : "+sizex+":"+sizey);
 
 	posx=posx*(canvas.width/layout.width);
 	posy=posy*(canvas.height/layout.height);
 
-	if(posx<=pos_x && posx+(sizex*(canvas.width/layout.width))>=pos_x && posy<=pos_y && posy+(sizey*(canvas.height/layout.height))>=pos_y && piece.posz==current_layer){
+	if(posx<=pos_x && posx+(sizex*(canvas.width/layout.width))>=pos_x && posy<=pos_y && posy+(sizey*(canvas.height/layout.height))>=pos_y){
 		return({index : i, posx: posx, posy: posy, sizex: sizex, sizey: sizey, posz: piece.posz});
 	}
 }
@@ -252,41 +300,35 @@ function placedBlockParams(pos_x, pos_y){
 	return 0;
 }
 
+//Fonction getBlockParams : pour une position de la souris donnee, renvoie les parametres du bloc place
+//Parametres : position de la souris en x et en y
+//Retourne la position du bloc en x, y, z, sa position reelle en x et y, sa taille en x et y, son type et son orientation.
+//La position reelle realpos correspond a la position du clic tandis que la position pos correspond a la position du coin
+//superieur gauche de la piece permettant de faire l'affichage
+//Comme placedBlockParams, cette fonction fait appel a piecePosition et travaille en position reduite.
+//Si l'utilisateur est trop proche du bord du canvas, on ramene l'affichage dans le canvas 
+
 function getBlockParams(posx, posy){
-    var realposy = Math.trunc(posy*(layout.height/canvas.height));
-    var realposx = Math.trunc(posx*(layout.width/canvas.width));
-    posx=realposx;
-    posy=realposy;
+    var realposy = Math.trunc(posy);
+    var realposx = Math.trunc(posx);
+    console.log("pos : "+posx+":"+posy);
+    posx=Math.trunc(realposx*(layout.width/canvas.width));
+    posy=Math.trunc(realposy*(layout.height/canvas.height));
     var sizex;
     var sizey;
-    switch(rotatePiece){
-    case 0:
-	posy = realposy-pieces[currentPiece].sizey + 1;
-	sizex = pieces[currentPiece].sizex;
-	sizey = pieces[currentPiece].sizey;
-	break;
-    case 1:
-	sizex = pieces[currentPiece].sizey;
-	sizey = pieces[currentPiece].sizex;
-	break;
-    case 2:
-	posx = realposx-pieces[currentPiece].sizex + 1;
-	sizex = pieces[currentPiece].sizex;
-	sizey = pieces[currentPiece].sizey;
-	break;
-    case 3:
-	posy = realposy-pieces[currentPiece].sizex + 1;
-	posx = realposx-pieces[currentPiece].sizey + 1;
-	sizex = pieces[currentPiece].sizey;
-	sizey = pieces[currentPiece].sizex;
-	break;
-    default:
-	break;
-    }
+    console.log("npos : "+posx+":"+posy);
+    var position = piecePosition(rotatePiece, posx, posy, pieces[currentPiece].sizex, pieces[currentPiece].sizey);
+
+    console.log(position);
+
+    posx=position.posx;
+    posy=position.posy;
+    sizex=position.sizex;
+    sizey=position.sizey;
+
     posx = posx*(canvas.width/layout.width);
     posy = posy*(canvas.height/layout.height);
-    realposx = realposx*(canvas.width/layout.width);
-    realposy = realposy*(canvas.height/layout.height);
+    
     if(posx>(canvas.width-(canvas.width/layout.width)*sizex)){
 	posx = posx-canvas.width/layout.width;
     }
@@ -305,6 +347,10 @@ function getBlockParams(posx, posy){
 /*
 MOUSE CLICK HANDLING
 */
+
+//Gestion du clic utilisateur. Cette fonction est principalement longue car elle est compatible avec des navigateurs plus anciens.
+//En fonction du mode, les fonctions addPiece ou removePiece sont appelees. La fonction checkPiece est appelee pour verifier si le placement
+//de piece est possible. Deux erreurs sont alors gerees : chevauchement de pieces (code 3) et aucune piece en-dessous (code 2)
 
 function legoClick(e){
     if(edit==1){
@@ -355,6 +401,7 @@ function legoClick(e){
     }
 }
 
+//Verifie que le placement de la piece actuellement selectionnee n'est pas illegal. TODO : refactor avec les regles de placement
 
 function checkPiece(e){
     var pos = getMousePos(e);
@@ -385,6 +432,8 @@ function checkPiece(e){
     return 0;
 }
 
+//Affiche un bloc a la position donnee en parametres, en faisant appel a getBlockParams pour obtenir les parametres du bloc
+
 function placeLegoGraph(pos){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 		params = getBlockParams(pos.x, pos.y)
@@ -397,7 +446,7 @@ function placeLegoGraph(pos){
 function addPiece(pos){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 	    var params = getBlockParams(pos.x, pos.y);
-		placedPieces.push({posx: params.realposx, posy: params.realposy, posz: params.posz, sizex: params.sizex, sizey: params.sizey, type: params.type, orientation: params.orientation});
+		placedPieces.push({posx: params.realposx, posy: params.realposy, posz: params.posz, sizex: pieces[currentPiece].sizex, sizey: pieces[currentPiece].sizey, type: params.type, orientation: params.orientation});
 	}
 }
 
@@ -407,7 +456,7 @@ function removePiece(e){
 	if(params!=0){
 		console.log(params.posz);
 		layers_context[params.posz-1].clearRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
-		placedPieces.splice(i, 1);
+		placedPieces.splice(params.index, 1);
 	}
 }
 
@@ -424,8 +473,8 @@ function layer_buttons()
 	layer_up.onclick = function(){
 		if(current_layer<nb_layers){
 		    current_layer++;
+		    layers_canvas[current_layer-1].style.opacity=1;
 		    current_layer_div.innerHTML=current_layer;
-		    layers_context[current_layer-1].globalAlpha=1;
 		}
 		else{
 			alert("There are only "+nb_layers+" layers");
@@ -434,8 +483,8 @@ function layer_buttons()
 
 	layer_down.onclick = function(){
 		if(current_layer>1){
+		    layers_canvas[current_layer-1].style.opacity=0.3;
 		    current_layer--;
-		    layers_context[current_layer-1].globalAlpha=0.3;
 		    current_layer_div.innerHTML=current_layer;
 		}
 		else{
