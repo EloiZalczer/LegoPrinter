@@ -17,11 +17,11 @@ exports.list_projects = function(req, res) {
 
 
 exports.create_project = function(req, res) {
-    var sql = "INSERT INTO PROJECT (project_name, last_modified, sizex, sizey, size_z) VALUES ($1, $2, $3, $4, $5)";
+    var sql = "INSERT INTO PROJECT (project_name, last_modified, sizex, sizey, sizez) VALUES ($1, $2, $3, $4, $5)";
     console.log(req.body.project_name);
     pg.client.query(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.size_z ], function(err, results){
 	if(err){
-	    //console.log(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.size_z ]);
+	    //console.log(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.sizez ]);
 	    console.error(err);
 	    res.statusCode = 500;
 	    return res.json({errors: ['Could not create project'] });
@@ -134,5 +134,18 @@ exports.list_pieces = function(req, res){
 	}
 	res.statusCode = 200;
 	return res.json(results.rows);
+    });
+}
+
+exports.list_colors = function(req, res){
+    var sql = 'SELECT * FROM COLORS_MINIMAL';
+    pg.client.query(sql, function(err, results){
+        if(err){
+            console.error(err);
+            res.statusCode = 500;
+            return res.json({errors: ['Could not load colors'] });
+        }
+        res.statusCode = 200;
+        return res.json(results.rows);
     });
 }

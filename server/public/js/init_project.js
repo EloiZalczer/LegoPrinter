@@ -65,6 +65,31 @@ function load_projects_list(){
     xhr.send();
 }
 
+function load_colors(){
+    info('Chargement des couleurs');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", '/colors', true);
+    xhr.onload = function() {
+        colors = JSON.parse(xhr.responseText);
+        var colorsselect = document.getElementById("colorsselect");
+        if (xhr.readyState == 4 && xhr.status == "200"){
+            console.table(colors);
+            for (item in colors){
+		var hexvalue = colors[item].color_code.toString(16);
+                projectselect.innerHTML += '<option value="'+hexvalue+'">'+colors[item].color_name+'</option>';
+            }
+        }
+        else{
+            console.error(projects);
+        }
+        return 0;
+    }
+
+    xhr.send();
+}
+
+
 function open_existing_project(project_to_open){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/project/'+projects_list[project_to_open].project_id, true);

@@ -16,5 +16,8 @@ module.exports = function(app) {
 
     app.route('/pieces')
 	.get(lego.list_pieces);
+
+    app.route('/colors')
+	.get(lego.list_colors);
     
 };
