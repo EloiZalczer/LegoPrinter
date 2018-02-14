@@ -19,7 +19,7 @@ exports.list_projects = function(req, res) {
 exports.create_project = function(req, res) {
     var sql = "INSERT INTO PROJECT (project_name, last_modified, sizex, sizey, sizez) VALUES ($1, $2, $3, $4, $5)";
     console.log(req.body.project_name);
-    pg.client.query(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.size_z ], function(err, results){
+    pg.client.query(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.sizez ], function(err, results){
 	if(err){
 	    //console.log(sql, [ req.body.project_name, new Date(), req.body.sizex, req.body.sizey, req.body.sizez ]);
 	    console.error(err);
@@ -71,7 +71,7 @@ exports.save_project = function(req, res) {
     console.log(req.params.project_id);
     for (var item in req.body){
 	console.log(req.body[item]);
-	sql+='('+req.params.project_id+', '+req.body[item].type+', '+req.body[item].posx+', '+req.body[item].posy+', '+req.body[item].posz+', '+req.body[item].orientation+'),';
+	sql+='('+req.params.project_id+', '+req.body[item].type+', '+req.body[item].orientation+', '+req.body[item].posx+', '+req.body[item].posy+', '+req.body[item].posz+", '"+req.body[item].color+"'),";
     }
     sql = sql.slice(0, -1);
     sql+=';';

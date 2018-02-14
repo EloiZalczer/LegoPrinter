@@ -11,7 +11,7 @@ window.addEventListener("load",function(){
     var start_overlay = document.getElementById('start_overlay');
     var create_project = document.getElementById('create_project');
     var existing_project = document.getElementById('existing_project');
-    
+    load_colors();
     projects_list=load_projects_list();
 
     validate_open_project.addEventListener("click", start_project, false);
@@ -76,8 +76,7 @@ function load_colors(){
         if (xhr.readyState == 4 && xhr.status == "200"){
             console.table(colors);
             for (item in colors){
-		var hexvalue = colors[item].color_code.toString(16);
-                projectselect.innerHTML += '<option value="'+hexvalue+'">'+colors[item].color_name+'</option>';
+                colorsselect.innerHTML += '<option value="'+colors[item].color_code+'">'+colors[item].color_name+'</option>';
             }
         }
         else{
@@ -99,7 +98,7 @@ function open_existing_project(project_to_open){
 	if (xhr.readyState == 4 && xhr.status == "200") {
 	    console.table(pieces);
 	    placedPieces = pieces;
-	    nb_layers = projects_list[project_to_open].size_z;
+	    nb_layers = projects_list[project_to_open].sizez;
 	    sizex = projects_list[project_to_open].sizex;
 	    sizey = projects_list[project_to_open].sizey;
 	    project_id = projects_list[project_to_open].project_id;
@@ -150,7 +149,7 @@ function create_new_project(){
 
     sizex=document.getElementById('sizex').value;
     sizey=document.getElementById('sizey').value;
-    nb_layers=document.getElementById('size_z').value;
+    nb_layers=document.getElementById('sizez').value;
     project_name=document.getElementById('new_project_name').value;
     if(checkNumber(0, sizex)==false || checkNumber(0, sizey)==false || checkNumber(1, nb_layers)==false){
 	valid=0;
@@ -161,7 +160,7 @@ function create_new_project(){
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", '/project', true);
 
-    var new_project_data={project_name: project_name, sizex: sizex, sizey: sizey, size_z: nb_layers};
+    var new_project_data={project_name: project_name, sizex: sizex, sizey: sizey, sizez: nb_layers};
 
     var json = JSON.stringify(new_project_data);
     console.log(json);

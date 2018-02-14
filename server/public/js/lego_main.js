@@ -125,7 +125,8 @@ function load_canvas()
 	    currentPiece = pieces.map(function(x) {return x.type; }).indexOf(placedPieces[i].type);
             pos={x: placedPieces[i].posx, y: placedPieces[i].posy};
 	    current_layer=placedPieces[i].posz;
-            placeLegoGraph(pos);
+	    var color = "#"+placedPieces[i].color;
+            placeLegoGraph(pos, color);
         }
     }
     current_layer=1;
@@ -360,9 +361,10 @@ function legoClick(e){
 		if(mode==0){
 		    ret=checkPiece(e);
 		    if(ret==1){
+		 	var color = "#"+document.getElementById("colorsselect").value;
 			var pos = getMousePos(e);
-			placeLegoGraph(pos);
-			addPiece(pos);
+			placeLegoGraph(pos, color);
+			addPiece(pos, color);
 		    }
 		    else if(ret==2){
 			info("Aucune pièce en-dessous");
@@ -382,9 +384,10 @@ function legoClick(e){
 	    if(mode==0){
 		ret=checkPiece(e);
 		if(ret==1){
+		    var color = "#"+document.getElementById("colorsselect").value;
 		    var pos = getMousePos(e);
-		    placeLegoGraph(pos);
-		    addPiece(pos);
+		    placeLegoGraph(pos, color);
+		    addPiece(pos, color);
 		}
 		else if(ret==2){
 		    info("Aucune pièce en-dessous");
@@ -434,19 +437,19 @@ function checkPiece(e){
 
 //Affiche un bloc a la position donnee en parametres, en faisant appel a getBlockParams pour obtenir les parametres du bloc
 
-function placeLegoGraph(pos){
+function placeLegoGraph(pos, color){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
-		params = getBlockParams(pos.x, pos.y)
-		layers_context[current_layer-1].fillStyle = layers_colors[current_layer-1];
+		params = getBlockParams(pos.x, pos.y);
+		layers_context[current_layer-1].fillStyle = color;
 		console.log("pos : "+params.posx+":"+params.posy+", size : "+params.sizex*(canvas.width/layout.width)+":"+params.sizey*(canvas.height/layout.height));
 		layers_context[current_layer-1].fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 	}
 }
 
-function addPiece(pos){
+function addPiece(pos, color){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 	    var params = getBlockParams(pos.x, pos.y);
-		placedPieces.push({posx: params.realposx, posy: params.realposy, posz: params.posz, sizex: pieces[currentPiece].sizex, sizey: pieces[currentPiece].sizey, type: params.type, orientation: params.orientation});
+		placedPieces.push({posx: params.realposx, posy: params.realposy, posz: params.posz, sizex: pieces[currentPiece].sizex, sizey: pieces[currentPiece].sizey, type: params.type, orientation: params.orientation, color: color});
 	}
 }
 
@@ -536,3 +539,16 @@ window.addEventListener('contextmenu', function(e) {
 		return false;
 	}
 }, false);
+
+
+/*
+CANCEL/REDO
+*/
+
+function KeyPress(e) {
+	var evtobj = window.event? event : e
+	if (evtobj.keyCode == 90 && evtobj.ctrlKey) alert("Ctrl+z");
+	else if (evtobj.keyCode == 89 && evtobj.ctrlKey) alert("Ctrl+y");
+}
+
+document.onkeydown = KeyPress;

@@ -13,6 +13,14 @@ function startPrinting()
     print_model.onclick = function(){
 	edit=0;
 	popups.innerHTML+="<div id='print_popup'><h2>Impression</h2><p>Veuillez entrer l'adresse IP de l'imprimante</p><input type='text' id='ip_address_printer'><br/><button id='validate_print'>Valider</button></div>";
+	var uniquePieces = new Set();
+	var l = placedPieces.length, i;
+	for(i=0; i<l; i++) {
+		var piece = [placedPieces[i].sizex, placedPieces[i].sizey, placedPieces[i].color];
+		console.log(uniquePieces.has(piece));
+		if(!uniquePieces.has(piece))uniquePieces.add(piece);
+	}
+	console.table(uniquePieces);
 	var valid=document.getElementById("validate_print");
 	var print_popup=document.getElementById("print_popup");
 	valid.onclick=function(){
@@ -67,3 +75,5 @@ function sendPrintData(){
     // Finally, send our data.
     XHR.send(urlEncodedData);
 }
+
+
