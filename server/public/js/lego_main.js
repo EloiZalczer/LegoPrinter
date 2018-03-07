@@ -12,8 +12,6 @@ var current_layer = 1;
 var current_layer_div;
 var mode = 0;
 
-var layers_colors = ["red", "blue", "green"];
-
 var layout;
 
 var currentPiece = 0;
