@@ -92,6 +92,18 @@ function Model(sizex, sizey){
 		this.canvas_overlay.context.fillRect(params.posx, params.posy, (this.canvas_layout.width/layout.width)*params.sizex, (this.canvas_layout.height/layout.height)*params.sizey);
 	}
     }
+
+    function getMousePos(e){
+	var rect = this.canvas_layout.canvas.getBoundingClientRect(), // abs. size of element
+	    scaleX = this.canvas_layout.width / rect.width,    // relationship bitmap vs. element for X
+	    scaleY = this.canvas_layout.height / rect.height;  // relationship bitmap vs. element for Y
+	
+	return {
+	    x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+	    y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+	}
+    }
+    
 }
 
 function Canvas(canvas, context, layout){
