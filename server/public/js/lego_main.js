@@ -125,7 +125,7 @@ function load_canvas()
 	    currentPiece = pieces.map(function(x) {return x.type; }).indexOf(placedPieces[i].type);
             pos={x: placedPieces[i].posx, y: placedPieces[i].posy};
 	    current_layer=placedPieces[i].posz;
-	    var color = "#"+placedPieces[i].color;
+	    var color = placedPieces[i].color;
             placeLegoGraph(pos, color);
         }
     }
@@ -361,7 +361,7 @@ function legoClick(e){
 		if(mode==0){
 		    ret=checkPiece(e);
 		    if(ret==1){
-		 	var color = "#"+document.getElementById("colorsselect").value;
+		 	var color = document.getElementById("colorsselect").value;
 			var pos = getMousePos(e);
 			placeLegoGraph(pos, color);
 			addPiece(pos, color);
@@ -384,7 +384,7 @@ function legoClick(e){
 	    if(mode==0){
 		ret=checkPiece(e);
 		if(ret==1){
-		    var color = "#"+document.getElementById("colorsselect").value;
+		    var color = document.getElementById("colorsselect").value;
 		    var pos = getMousePos(e);
 		    placeLegoGraph(pos, color);
 		    addPiece(pos, color);
@@ -440,7 +440,7 @@ function checkPiece(e){
 function placeLegoGraph(pos, color){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 		params = getBlockParams(pos.x, pos.y);
-		layers_context[current_layer-1].fillStyle = color;
+		layers_context[current_layer-1].fillStyle = "#"+color;
 		console.log("pos : "+params.posx+":"+params.posy+", size : "+params.sizex*(canvas.width/layout.width)+":"+params.sizey*(canvas.height/layout.height));
 		layers_context[current_layer-1].fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 	}

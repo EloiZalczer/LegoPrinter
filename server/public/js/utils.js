@@ -8,3 +8,7 @@ window.addEventListener("load",function(){
 function info(text){
     infos.innerHTML = text;
 }
+
+function hasDuplicates(array) {
+    return (new Set(array)).size !== array.length;
+}
