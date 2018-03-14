@@ -13,6 +13,8 @@
     "nodemon": "^1.12.5"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "pg": "^7.4.1"
   }
 }
