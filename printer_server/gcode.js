@@ -4,14 +4,14 @@ module.exports = {
 
 const pos_reservoir = {x: 100, y: 100, z: 0};
 
-var gcode="";
-
 function generate(data){
 
-	gcode = "G28\n";
+	var gcode = "G28\n";
 
 	var coord_head = {x: 0, y: 0, z: 0};
 	for(let piece in data){
+
+		console.log("Data : "+data[piece]+" at piece : "+piece+"\n");
 
 		var reservoir = data[piece].container;
 		var posx = data[piece].posx-data[piece].posx%30+15;
@@ -67,4 +67,5 @@ function generate(data){
 
 	console.log(gcode);
 
+	return gcode;
 }

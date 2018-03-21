@@ -88,23 +88,22 @@ function validate(uniquePieces){
 	//print_popup.insertAdjacentHTML('beforeend', "<p>Veuillez utiliser un index different pour chaque piece</p>");
     }
     else{
+	var ip_addr = document.getElementById("ip_address_printer").value;
         print_popup.remove();
-        sendPrintData(pieces_position);
+        sendPrintData(pieces_position, ip_addr);
     }   
 }
 
-function sendPrintData(pieces_position){
+function sendPrintData(pieces_position, ip_addr){
     var XHR = new XMLHttpRequest();
-    var urlEncodedData = "";
-    var urlEncodedDataPairs = [];
     var name;
     var i=0;
     
-    var toSend = generatePrintData(pieces_position);
-    console.log(toSend);
+    var toSend = JSON.stringify(generatePrintData(pieces_position));
+    console.log("toSend : "+toSend);
     
     // Turn the data object into an array of URL-encoded key/value pairs.
-    for(piece in toSend) {
+    /*for(piece in toSend) {
 	urlEncodedDataPairs.push(encodeURIComponent("piece") + '=' + encodeURIComponent(i));
 	urlEncodedDataPairs.push(encodeURIComponent("posx") + '=' + encodeURIComponent(toSend[piece].posx));
 	urlEncodedDataPairs.push(encodeURIComponent("posy") + '=' + encodeURIComponent(toSend[piece].posy));
@@ -115,9 +114,8 @@ function sendPrintData(pieces_position){
     
     // Combine the pairs into a single string and replace all %-encoded spaces to 
     // the '+' character; matches the behaviour of browser form submissions.
-    urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
-
-    alert(urlEncodedData);
+    //urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+	*/
     
     // Define what happens on successful data submission
     XHR.addEventListener('load', function(event) {
@@ -130,13 +128,13 @@ function sendPrintData(pieces_position){
     });
     
     // Set up our request
-    XHR.open('POST', 'https://example.com/cors.php');
+    XHR.open('POST', "http://"+ip_addr);
     
     // Add the required HTTP header for form data POST requests
-    XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    XHR.setRequestHeader('Content-Type', 'application/json');
     
     // Finally, send our data.
-    XHR.send(urlEncodedData);
+    XHR.send(toSend);
 
     edit=1;
 }
