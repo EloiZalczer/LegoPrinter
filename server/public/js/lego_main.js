@@ -123,7 +123,7 @@ function load_canvas()
         for(var i=0;i<placedPieces.length;i++){
 	    rotatePiece=placedPieces[i].orientation;
 	    currentPiece = pieces.map(function(x) {return x.type; }).indexOf(placedPieces[i].type);
-            pos={x: placedPieces[i].posx, y: placedPieces[i].posy};
+            pos={x: placedPieces[i].posx+5, y: placedPieces[i].posy+5};
 	    current_layer=placedPieces[i].posz;
 	    var color = placedPieces[i].color;
             placeLegoGraph(pos, color);
@@ -414,18 +414,16 @@ function checkPiece(e){
 	    var valid=0;
 	    for(i=0;i<placedPieces.length;i++){
 		piece=placedPieces[i];
-		if(piece.posx<pos.x && piece.posx+(piece.sizex*(canvas.width/layout.width))>pos.x && piece.posy<pos.y && piece.posy+(piece.sizey*(canvas.height/layout.height))>pos.y && piece.posz==current_layer-1){
+		if(piece.posz==current_layer-1 && piece.posx==params.posx && piece.posy==params.posy){
 		    valid=1;
 		    break;
 		}
 	    }
-	    if(valid==0){
-		return 2;
-	    }
+	    if(valid==0){return 2;}
 	}
 	for(i=0;i<placedPieces.length;i++){
 	    piece=placedPieces[i];
-	    if(params.posx<=piece.posx+(piece.sizex*(canvas.width/layout.width)) && params.posx+params.sizex>=piece.posx && params.posy<=piece.posy+(piece.sizey*(canvas.width/layout.width)) && params.posy+params.sizey>=piece.posy && piece.posz==current_layer){
+	    if(piece.posz==current_layer && piece.posx==params.posx && piece.posy==params.posy){
 		return 3;
 	    }
 	}
@@ -449,7 +447,7 @@ function placeLegoGraph(pos, color){
 function addPiece(pos, color){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 	    var params = getBlockParams(pos.x, pos.y);
-		placedPieces.push({posx: params.realposx, posy: params.realposy, posz: params.posz, sizex: pieces[currentPiece].sizex, sizey: pieces[currentPiece].sizey, type: params.type, orientation: params.orientation, color: color});
+		placedPieces.push({posx: params.posx, posy: params.posy, posz: params.posz, sizex: pieces[currentPiece].sizex, sizey: pieces[currentPiece].sizey, type: params.type, orientation: params.orientation, color: color});
 	}
 }
 
