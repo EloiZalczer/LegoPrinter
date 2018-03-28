@@ -53,8 +53,13 @@ port.open(function(err){
 });
 
 port.on('open', function(){
-        var toSend = gcode.generate(pieces);
-        port.write(toSend);
+        //var toSend = gcode.generate(pieces);
+        var toSend = "M360 \r\n";
+	port.write(toSend);
+});
+
+port.on('data', function (data) {
+  console.log('Data:', data);
 });
 
 // Start listening for HTTP requests

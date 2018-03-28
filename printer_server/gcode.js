@@ -11,7 +11,7 @@ function generate(data){
 	var coord_head = {x: 0, y: 0, z: 0};
 	for(let piece in data){
 
-		console.log("Data : "+data[piece]+" at piece : "+piece+"\n");
+		console.log("Data : "+data[piece]+" at piece : "+piece+"\r\n");
 
 		var reservoir = data[piece].container;
 		var posx = data[piece].posx-data[piece].posx%30+15;
@@ -19,7 +19,7 @@ function generate(data){
 		var posz = data[piece].posz-data[piece].posz%30+15;
 
 		coord_head.x+=20;
-		gcode+="G0 Z20\n";
+		gcode+="G0 Z20\n\r";
 		gcode+="G0 ";
 		
 		coord_head.x = pos_reservoir.x-coord_head.x+reservoir*14;
@@ -31,16 +31,16 @@ function generate(data){
                         gcode+=" Y"+coord_head.y;
                 }
 
-		gcode +="\n";
+		gcode +="\r\n";
 
 		coord_head.z = pos_reservoir.z-coord_head.z;
 		if(coord_head.z!=0){ 
-                        gcode+="G0 Z"+coord_head.z+"\n";
+                        gcode+="G0 Z"+coord_head.z+"\r\n";
                 }
 
 		coord_head.z = 20-coord_head.z;
 		if(coord_head.z!=0){
-                        gcode+="G0 Z"+coord_head.z+"\n";
+                        gcode+="G0 Z"+coord_head.z+"\r\n";
                 }
 
 		gcode += "G0 ";
@@ -52,20 +52,20 @@ function generate(data){
 
 		coord_head.y = posy-coord_head.y;
 		if(coord_head.y!=0){
-                        gcode+=" Y"+coord_head.y+"\n";
+                        gcode+=" Y"+coord_head.y+"\r\n";
                 }
 
 		coord_head.z = posz-coord_head.z;
 		if(coord_head.z!=0){
-                        gcode+="G0 Z"+coord_head.z+"\n";
+                        gcode+="G0 Z"+coord_head.z+"\r\n";
                 }
 
 		coord_head.x = coord_head.x+10;
-		gcode+="G0 X10\n";
+		gcode+="G0 X10\r\n";
 
 	}
 
-	console.log(gcode);
+	//console.log(gcode);
 
 	return gcode;
 }
