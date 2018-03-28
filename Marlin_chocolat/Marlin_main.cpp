@@ -212,11 +212,6 @@
  * M999 - Restart after being stopped by error
  */
 
- #ifdef CHOCO
-  extern int chocolate_mode;
-  int pinChoco=4; //Pin to read if we allow extrusion (com with Arduino Uno)
-#endif
-
 #ifdef SDSUPPORT
   CardReader card;
 #endif
@@ -589,11 +584,7 @@ void setup() {
   setup_powerhold();
   MYSERIAL.begin(BAUDRATE);
   SERIAL_PROTOCOLLNPGM("start");
-  SERIAL_ECHO_START;
-
-  #ifdef CHOCO
-    pinMode(pinChoco, INPUT);
- #endif   
+  SERIAL_ECHO_START; 
 
 
   // Check startup - does nothing if bootloader sets MCUSR to 0
@@ -718,21 +709,6 @@ void loop() {
     commands_in_queue--;
     cmd_queue_index_r = (cmd_queue_index_r + 1) % BUFSIZE;
   }
-  
-  // Check pressure status every n milliseconds
-    #ifdef CHOCO
-  
-    if (chocolate_mode&&card.sdprinting)
-    {
-      int print_choco = digitalRead(pinChoco);
-      while (print_choco==0)
-      {
-        gcode_M25();//pause SD Print 
-        print_choco = digitalRead(pinChoco);
-        }
-     gcode_M24();//Resume SD Print 
-    }
-  #endif //CHOCO
 
   // Check heater every n milliseconds
   manage_heater(); 
