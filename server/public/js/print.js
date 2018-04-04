@@ -58,7 +58,7 @@ function startPrinting()
 	var valid=document.getElementById("validate_print");
 	var cancel=document.getElementById("cancel_print");
 	valid.addEventListener("click", function(){validate(uniquePieces);}, false);
-	cancel.addEventListener("click", function(){print_popup.remove();}, false);
+	cancel.addEventListener("click", function(){print_popup.remove();edit=1;}, false);
     }
 }
 
@@ -90,6 +90,7 @@ function validate(uniquePieces){
     else{
 	var ip_addr = document.getElementById("ip_address_printer").value;
         print_popup.remove();
+	edit=1;
         sendPrintData(pieces_position, ip_addr);
     }   
 }
@@ -135,6 +136,4 @@ function sendPrintData(pieces_position, ip_addr){
     
     // Finally, send our data.
     XHR.send(toSend);
-
-    edit=1;
 }
