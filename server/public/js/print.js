@@ -103,29 +103,22 @@ function sendPrintData(pieces_position, ip_addr){
     var toSend = JSON.stringify(generatePrintData(pieces_position));
     console.log("toSend : "+toSend);
     
-    // Turn the data object into an array of URL-encoded key/value pairs.
-    /*for(piece in toSend) {
-	urlEncodedDataPairs.push(encodeURIComponent("piece") + '=' + encodeURIComponent(i));
-	urlEncodedDataPairs.push(encodeURIComponent("posx") + '=' + encodeURIComponent(toSend[piece].posx));
-	urlEncodedDataPairs.push(encodeURIComponent("posy") + '=' + encodeURIComponent(toSend[piece].posy));
-	urlEncodedDataPairs.push(encodeURIComponent("posz") + '=' + encodeURIComponent(toSend[piece].posz));
-	urlEncodedDataPairs.push(encodeURIComponent("container") + '=' + encodeURIComponent(toSend[piece].container));
-	i++;
-    }
-    
-    // Combine the pairs into a single string and replace all %-encoded spaces to 
-    // the '+' character; matches the behaviour of browser form submissions.
-    //urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
-	*/
-    
     // Define what happens on successful data submission
     XHR.addEventListener('load', function(event) {
-	alert('Yeah! Data sent and response loaded.');
+	var ret = JSON.parse(XHR.responseText);
+	if(XHR.readyState == 4 && XHR.status == "200"){
+	    info("Impression lancée");
+	    console.log(ret);
+	}
+	else{
+	    info(ret);
+	    console.error(ret);
+	}
     });
     
     // Define what happens in case of error
     XHR.addEventListener('error', function(event) {
-	alert('Oups! Something goes wrong.');
+	info("Erreur lors de l'envoi de la requête");
     });
     
     // Set up our request

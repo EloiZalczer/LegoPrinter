@@ -414,7 +414,9 @@ function legoClick(e){
     }
 }
 
-//Verifie que le placement de la piece actuellement selectionnee n'est pas illegal. TODO : refactor avec les regles de placement
+//Verifie que le placement de la piece actuellement selectionnee n'est pas illegal. Les deux regles prises en compte sont :
+//    - Obligatoirement une piece en-dessous de la piece actuelle si placee sur un calque > 1
+//    - Pas de chevauchement de pieces
 
 function checkPiece(e){
     var pos = getMousePos(e);
@@ -454,12 +456,16 @@ function placeLegoGraph(pos, color){
 	}
 }
 
+//Ajoute une nouvelle piece dans la structure de donnees placedPieces pour sauvegarde
+
 function addPiece(pos, color){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 	    var params = getBlockParams(pos.x, pos.y);
 		placedPieces.push({posx: params.posx, posy: params.posy, posz: params.posz, sizex: pieces[currentPiece].sizex, sizey: pieces[currentPiece].sizey, type: params.type, orientation: params.orientation, color: color});
 	}
 }
+
+//Supprime une piece de la structure de donnees et l'efface graphiquement
 
 function removePiece(e){
 	var pos = getMousePos(e);
@@ -475,6 +481,9 @@ function removePiece(e){
 /*
 BUTTON HANDLING
 */
+
+//Gestion des boutons pour changer de calque actuel. Lors du changement de calque, on verifie que le nouveau calque n'est pas illegal
+//(compris entre 1 et nb_layers). En cas d'erreur, un message est affiche a l'utilisateur.
 
 function layer_buttons()
 {
@@ -508,6 +517,8 @@ function layer_buttons()
 BLOCK SELECTION
 */
 
+//Selection du type de piece a placer. Code commente car on ne gere plus que les pieces 1x1.
+
 /*function blockSelectButtons()
 {
 	validateBlock = document.getElementById('validateBlock');
@@ -523,6 +534,8 @@ BLOCK SELECTION
 MODE SELECTION
 */
 
+//Gestion de la selection du mode (0 : placer ou 1 : supprimer).
+
 function modeSelectButton()
 {
 	validateMode = document.getElementById('validateMode');
@@ -537,6 +550,8 @@ function modeSelectButton()
 /*
 RIGHT CLICK HANDLING
 */
+
+//Gestion de la rotation des pieces avec le clic droit. La fonction mouse_hover est appelee dans le processus pour mettre à jour l'affichage sans que l'utilisateur n'ait besoin de bouger. On utilise la fonction preventDefault pour empêcher l'ouverture d'un menu contextuel.
 
 window.addEventListener('contextmenu', function(e) {
 	var pos = getMousePos(e);
