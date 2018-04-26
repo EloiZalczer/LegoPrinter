@@ -4,13 +4,18 @@ var express=require('express'),
 
 var SerialPort=require('serialport'); 
 
+var index=0; //Numero de ligne envoye
+var toSend; //Donnees a envoyer, tableau de string
+
 var gcode = require('./gcode');
 
 var pieces = new Array();
 
 for(let i=0;i<10;i++){
-	pieces.push({posx: i*10, posy: i*20, posz: i*2, container: i}); 
+	pieces.push({posx: i*30+50.4, posy: i*30+7, posz: 0, container: i}); 
 }
+
+gcode.generate(pieces);
 
 var bodyParser = require('body-parser')
 
@@ -57,9 +62,9 @@ var port = new SerialPort('/dev/ttyACM0', {baudRate: 250000,
                 xoff: false,
                 xany: false,
                 hupcl:false,
-                rts: true,
+                rts: false,
                 cts: false,
-                dtr: true,
+                dtr: false,
                 dts: false,
                 brk: false,
                 databits: 8,
@@ -67,10 +72,10 @@ var port = new SerialPort('/dev/ttyACM0', {baudRate: 250000,
                 buffersize: 256});
 
 port.on('open', function(){
-        //var toSend = gcode.generate(pieces);
+        toSend = gcode.generate(pieces);
 	//sleep(10000);
 
-	setTimeout(sendData, 10000);
+	setTimeout(function(){sendData(0);}, 10000);
 });
 
 port.open(function(err){
@@ -81,14 +86,20 @@ port.open(function(err){
 });
 
 
-function sendData(){
-	var toSend = "G1 X100 Y100 Z100\n";
-	console.log("Sending data : " + toSend);
-	port.write(toSend);
+function sendData(index){
+	//Send = "G91\nG1 X100\nM119\n";
+	if(index>toSend.length)return;
+	console.log("Sending data : " + toSend[index]);
+	port.write(toSend[index]);	
 }
 
 port.on('data', function (data) {
-  console.log('Data : '+ data);
+    console.log('Data : '+ data);
+    if(data=="ok\n" || data=="ok" || data=="k\n" || data=="\nok"){
+	console.log("ok received");
+	index++;
+	sendData(index);
+    }
 });
 
 // Start listening for HTTP requests
