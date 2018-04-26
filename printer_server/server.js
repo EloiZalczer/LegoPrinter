@@ -9,13 +9,13 @@ var toSend; //Donnees a envoyer, tableau de string
 
 var gcode = require('./gcode');
 
-var pieces = new Array();
+/*var pieces = new Array();
 
 for(let i=0;i<10;i++){
 	pieces.push({posx: i*30+50.4, posy: i*30+7, posz: 0, container: i}); 
-}
+}*/
 
-gcode.generate(pieces);
+//gcode.generate(pieces);
 
 var bodyParser = require('body-parser')
 
@@ -44,23 +44,9 @@ app.set('port', process.env.PORT || 4000);
 
 app.post("/", function (req, res) {
     	console.log(req);
-	gcode.generate(req.body);
-	res.status=200;
-	res.send();
-	port.open(function(err){
-        	if(err){
-		    res.status=500;
-		    res.json({errors : ["Error opening port : "+ err.message] });
-		    return console.log('Error opening port ', err_message);
-        	}
-	    res.status=200;
-	    res.send();
-	    console.log("Opening serial port");
-	});
-});
-
-var port = new SerialPort('/dev/ttyACM0', {baudRate: 250000,
-		parity: 'none',
+	toSend = gcode.generate(req.body);
+	var port = new SerialPort('/dev/ttyACM0', {baudRate: 250000,
+                parity: 'none',
                 rtscts: false,
                 xon: false,
                 xoff: false,
@@ -75,37 +61,43 @@ var port = new SerialPort('/dev/ttyACM0', {baudRate: 250000,
                 stopbits: 1,
                 buffersize: 256});
 
-port.on('open', function(){
-        toSend = gcode.generate(pieces);
-	//sleep(10000);
+	port.open(function(err){
+        	if(err){
+		    res.status=500;
+		    res.json({errors : ["Error opening port : "+ err.message] });
+		    return console.log('Error opening port ', err.message);
+        	}
+	    res.status=200;
+	    res.send();
+	    console.log("Opening serial port");
+	});
 
-	setTimeout(function(){sendData(0);}, 10000);
+	port.on('open', function(){
+        	//toSend = gcode.generate(pieces);
+        	//sleep(10000);
+
+        	setTimeout(function(){sendData(0);}, 10000);
+	});
+
+	function sendData(index){
+        	//Send = "G91\nG1 X100\nM119\n";
+        	if(index>=toSend.length)return;
+        	console.log("Sending data : " + toSend[index]);
+        	port.write(toSend[index]);
+	}
+
+	port.on('data', function (data) {
+    		console.log('Data : '+ data);
+    		if(data=="ok\n" || data=="ok" || data=="k\n" || data=="\nok"){
+        		console.log("ok received");
+        		index++;
+        		sendData(index);
+    		}
+	});
+
 });
 
-port.open(function(err){
-        if(err){
-                return console.log("Error opening port : ", err.message);
-        }
-        console.log("Opening serial port");
-});
-
-
-function sendData(index){
-	//Send = "G91\nG1 X100\nM119\n";
-	if(index>toSend.length)return;
-	console.log("Sending data : " + toSend[index]);
-	port.write(toSend[index]);	
-}
-
-port.on('data', function (data) {
-    console.log('Data : '+ data);
-    if(data=="ok\n" || data=="ok" || data=="k\n" || data=="\nok"){
-	console.log("ok received");
-	index++;
-	sendData(index);
-    }
-});
-
+              
 // Start listening for HTTP requests
 var server = app.listen(app.get('port'), function() {
   var host = server.address().address;

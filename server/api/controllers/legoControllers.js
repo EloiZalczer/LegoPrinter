@@ -100,7 +100,8 @@ exports.save_project = function(req, res) {
 
 exports.delete_project = function(req, res) {
     var sql = 'DELETE FROM PLACED_PIECES WHERE project_id = $1';
-    var project_id = req.params.projectId;
+    var project_id = req.params.project_id;
+    console.log("Received delete request : "+project_id);
     pg.client.query(sql, [ project_id ],function(err, results){
 	if(err){
 	    console.error(err);
