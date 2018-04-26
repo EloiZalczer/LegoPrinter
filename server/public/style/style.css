@@ -1,8 +1,81 @@
-canvas{
-	position: absolute;
+#canvas_div canvas{
 	top: 100px;
-	left: 10px;
+	position: absolute;
 	border: 1px solid;
+	top: 150px; left: 50%;
+	transform: translate(-50%, 0%);
+}
+
+body{
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#menus #infos{
+	position: absolute;
+	text-align: right;
+	right: 20px;
+}
+
+#menus p{
+	color: white;
+}
+
+#current_layer{
+	margin-right: 32px;
+}
+
+#menus div{
+	display: inline;
+}
+
+#menus select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+
+#menus select{
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 140px;
+    background: url("dropdown.png") no-repeat right center;
+}
+
+.dropdown{
+	background-color: #4CAF50;
+	color: white;
+}
+
+#menus button{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+#menus button:hover {
+    background-color: #327235;
 }
 
 #open_project, #print_popup{
@@ -41,9 +114,10 @@ canvas{
     right: 0;
 }
 
-#size_x, #size_y, #size_z{
+#sizex, #sizey, #sizez{
     margin: 10px;
     width: 50px;
+	
 }
 
 #start_overlay{
@@ -84,4 +158,11 @@ canvas{
 
 #menus p{
     display: inline;
+}
+
+#menus{
+	padding-top: 25px;
+	margin-top: 0px;
+	text-align: center;
+	background-color: #4CAF50;
 }

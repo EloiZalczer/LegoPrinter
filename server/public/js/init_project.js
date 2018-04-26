@@ -20,7 +20,7 @@ window.addEventListener("load",function(){
 
 function checkNumber(mode, value){
 	if(Number.isNaN(value)){
-		alert('not an integer');
+		info("Veuillez entrer un entier");
 		return false;
 	}
 	if((mode==0 && value>20) || (mode==1 && value>5)){
@@ -31,11 +31,11 @@ function checkNumber(mode, value){
 
 function start_project(){
     if(create_project.checked==true){	
-	info("Create new project");
+	info("Nouveau projet");
 	create_new_project();
     }
     else if(existing_project.checked==true){
-	info("Open existing project");
+	info("Ouverture d'un projet existant");
 	var projectselect = document.getElementById('projectselect');
 	var project_to_open = projectselect.options[projectselect.selectedIndex].value;
 	open_existing_project(project_to_open);
@@ -117,7 +117,6 @@ function start_editor(){
     open_project.remove();
     start_overlay.remove();
     var user_canvas = document.getElementById('user_canvas');
-    alert(nb_layers);
     for(var i=0;i<nb_layers;i++){
 	user_canvas.innerHTML+='<canvas id="layer_'+i+'" width="'+sizex*block_size+'" height="'+sizey*block_size+'">\n</canvas>\n';
     }

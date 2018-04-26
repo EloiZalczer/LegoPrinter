@@ -2,20 +2,6 @@
 <html>
 	<head>
 	  <meta charset = "utf-8">
-	  <script type="text/javascript">
-		var nb_layers;
-		var size_x;
-		var size_y;
-		var project_name;
-		var layers_canvas = new Array;
-		var layers_context = new Array;
-		var edit=0;
-		var placedPieces = new Array;
-		var project_id;
-		var url = "172.26.145.163";
-		alert(url);
-		var pieces = new Array();
-	  </script>
 	  <script type="text/javascript" src="/js/utils.js"></script>
 	  <script type="text/javascript" src="/js/init_project.js"></script>
 	  <script type="text/javascript" src="/js/get_list_pieces.js"></script>
@@ -31,10 +17,10 @@
 	      <p id="error"></p>
 	      <input type="radio" name="open_mode" value="new_project" id="create_project">Créer un nouveau projet :
 	      <input type="text" id="new_project_name">
-	      <p>Dimensions :<br/>x : 
+	      <p>Dimensions :<br/>x: 
 		<input type="text" id="sizex">
 		y: <input type="text" id="sizey">
-		z: <input type="text" id="sizez"></p>
+		z: <input type="text" id="sizez"></p><br/>
 	      <input type="radio" name="open_mode" value="Projet existant" id="existing_project">Ouvrir un projet existant :
 	      <select name="project_to_open" id="projectselect">
 	      </select> 
@@ -42,30 +28,33 @@
 	    </div>
 	  </div>
 	  <div id="start_overlay"></div>
+	  <div id="canvas_div">
 	  <canvas id="background">
-	    Keskispass
+	    Les canvas ne sont pas supportés par votre navigateur.
 	  </canvas>
 	  <canvas id="layout_canvas">
-	    Keskispass
+	    Les canvas ne sont pas supportés par votre navigateur.
 	  </canvas>
 	  <div id="user_canvas">
 	  </div>
 	  <canvas id="overlay">
-	    Keskispass
+	    Les canvas ne sont pas supportés par votre navigateur.
+	  </canvas>
 	  </canvas>
 	  <div id="menus">
 	    <button id="layer_up">LAYER UP</button>
 	    <button id="layer_down">LAYER DOWN</button>
-	    <p>Current layer : </p>
+	    <p>Calque </p>
 	    <p id="current_layer">1</p>
+	    <!--<span id="pieces">
 	    <select name="blocks" id="blockselect">
 	    </select>
-	    <button id="validateBlock">Valider</button>
+	    <button id="validateBlock">Valider</button>-->
 	    <select name="colorsselect" id="colorsselect">
 	    </select>
 	    <select name="action" id="modeselect">
-	      <option value="0">Placer</option>
-	      <option value="1">Supprimer</option>
+	      <option class="dropdown" value="0">Placer</option>
+	      <option class="dropdown" value="1">Supprimer</option>
 	    </select>
 	    <button id="validateMode">Valider</button>
 	    <button id="print">Imprimer</button>

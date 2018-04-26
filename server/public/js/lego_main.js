@@ -2,6 +2,16 @@
 GLOBAL VARIABLES
 */
 
+var nb_layers;
+var size_x;
+var size_y;
+var project_name;
+var layers_canvas = new Array;
+var layers_context = new Array;
+var edit=0;
+var placedPieces = new Array;
+var project_id;
+var pieces = new Array();
 var canvas = 0;
 var context = 0;
 var canvas_overlay = 0;
@@ -28,7 +38,7 @@ window.onload = function(){
     current_layer_div = document.getElementById('current_layer');
     validate_open_project.onclick=function(){
 	layer_buttons();
-	blockSelectButtons();
+	//blockSelectButtons();
 	modeSelectButton();
 	window.addEventListener('click', legoClick, false);
     }
@@ -47,7 +57,7 @@ function load_canvas()
 
         {
 
-            alert("Impossible de récupérer le canvas");
+            console.error("Impossible de récupérer le canvas");
 
             return;
 
@@ -60,7 +70,7 @@ function load_canvas()
 
         {
 
-            alert("Impossible de récupérer le context du canvas");
+            console.error("Impossible de récupérer le context du canvas");
 
             return;
 
@@ -72,7 +82,7 @@ function load_canvas()
 
         {
 
-            alert("Impossible de récupérer le canvas");
+            console.error("Impossible de récupérer le canvas");
 
             return;
 
@@ -85,7 +95,7 @@ function load_canvas()
 
         {
 
-            alert("Impossible de récupérer le context du canvas");
+            console.error("Impossible de récupérer le context du canvas");
 
             return;
 
@@ -99,7 +109,7 @@ function load_canvas()
 
         {
 
-            alert("Impossible de récupérer le canvas");
+            console.error("Impossible de récupérer le canvas");
 
             return;
 
@@ -112,7 +122,7 @@ function load_canvas()
 
         {
 
-            alert("Impossible de récupérer le context du canvas");
+            console.error("Impossible de récupérer le context du canvas");
 
             return;
 
@@ -248,7 +258,7 @@ function piecePosition(orientation, posx, posy, sizex, sizey){
         default:
             break;
         }
-	console.log(ret+" avec o : "+orientation+" pos : "+posx+":"+posy+" size : "+sizex+":"+sizey);
+	//console.log(ret+" avec o : "+orientation+" pos : "+posx+":"+posy+" size : "+sizex+":"+sizey);
 	return ret;
 
 }
@@ -267,7 +277,7 @@ function placedBlockParams(pos_x, pos_y){
 		return 0;
 	}
 
-	console.log("mouse pos : "+pos_x+":"+pos_y);
+	//console.log("mouse pos : "+pos_x+":"+pos_y);
 
 	var posx;
 	var posy;
@@ -288,7 +298,7 @@ function placedBlockParams(pos_x, pos_y){
 	var sizex=position.sizex;
 	var sizey=position.sizey;
 
-	console.log("pos : "+posx+":"+posy+"size : "+sizex+":"+sizey);
+	//console.log("pos : "+posx+":"+posy+"size : "+sizex+":"+sizey);
 
 	posx=posx*(canvas.width/layout.width);
 	posy=posy*(canvas.height/layout.height);
@@ -312,15 +322,15 @@ function placedBlockParams(pos_x, pos_y){
 function getBlockParams(posx, posy){
     var realposy = Math.trunc(posy);
     var realposx = Math.trunc(posx);
-    console.log("pos : "+posx+":"+posy);
+    //console.log("pos : "+posx+":"+posy);
     posx=Math.trunc(realposx*(layout.width/canvas.width));
     posy=Math.trunc(realposy*(layout.height/canvas.height));
     var sizex;
     var sizey;
-    console.log("npos : "+posx+":"+posy);
+    //console.log("npos : "+posx+":"+posy);
     var position = piecePosition(rotatePiece, posx, posy, pieces[currentPiece].sizex, pieces[currentPiece].sizey);
 
-    console.log(position);
+    //console.log(position);
 
     posx=position.posx;
     posy=position.posy;
@@ -439,7 +449,7 @@ function placeLegoGraph(pos, color){
 	if(pos.x<canvas.width && pos.x>0 && pos.y<canvas.height && pos.y>0){
 		params = getBlockParams(pos.x, pos.y);
 		layers_context[current_layer-1].fillStyle = "#"+color;
-		console.log("pos : "+params.posx+":"+params.posy+", size : "+params.sizex*(canvas.width/layout.width)+":"+params.sizey*(canvas.height/layout.height));
+		//console.log("pos : "+params.posx+":"+params.posy+", size : "+params.sizex*(canvas.width/layout.width)+":"+params.sizey*(canvas.height/layout.height));
 		layers_context[current_layer-1].fillRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 	}
 }
@@ -455,7 +465,7 @@ function removePiece(e){
 	var pos = getMousePos(e);
 	var params = placedBlockParams(pos.x, pos.y);
 	if(params!=0){
-		console.log(params.posz);
+		//console.log(params.posz);
 		layers_context[params.posz-1].clearRect(params.posx, params.posy, (canvas.width/layout.width)*params.sizex, (canvas.height/layout.height)*params.sizey);
 		placedPieces.splice(params.index, 1);
 	}
@@ -478,7 +488,7 @@ function layer_buttons()
 		    current_layer_div.innerHTML=current_layer;
 		}
 		else{
-			alert("There are only "+nb_layers+" layers");
+			info("Il y a seulement "+nb_layers+" calques");
 		}
 	}
 
@@ -489,7 +499,7 @@ function layer_buttons()
 		    current_layer_div.innerHTML=current_layer;
 		}
 		else{
-			alert("You can't go below layer 1");
+			info("Impossible d'aller en-dessous du calque 1");
 		}
 	}
 }
@@ -498,16 +508,16 @@ function layer_buttons()
 BLOCK SELECTION
 */
 
-function blockSelectButtons()
+/*function blockSelectButtons()
 {
 	validateBlock = document.getElementById('validateBlock');
 	blockSelection = document.getElementById('blockselect');
 	
 	validateBlock.onclick = function(){
 		currentPiece = blockSelection.options[blockSelection.selectedIndex].value;
-		alert(currentPiece);
+		//alert(currentPiece);
 	}
-}
+}*/
 
 /*
 MODE SELECTION
@@ -520,7 +530,7 @@ function modeSelectButton()
 	
 	validateMode.onclick = function(){
 		mode = modeSelection.options[modeSelection.selectedIndex].value;
-		alert(mode);
+		//alert(mode);
 	}
 }
 
