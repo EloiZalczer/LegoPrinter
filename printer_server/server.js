@@ -44,9 +44,13 @@ app.post("/", function (req, res) {
 	res.send();
 	port.open(function(err){
         	if(err){
-                	return console.log("Error opening port : ", err.message);
+		    res.status=500;
+		    res.json({errors : ["Error opening port : "+ err.message] });
+		    return console.log('Error opening port ', err_message);
         	}
-		console.log("Opening serial port");
+	    res.status=200;
+	    res.send();
+	    console.log("Opening serial port");
 	});
 });
 
