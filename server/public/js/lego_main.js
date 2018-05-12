@@ -562,16 +562,3 @@ window.addEventListener('contextmenu', function(e) {
 		return false;
 	}
 }, false);
-
-
-/*
-CANCEL/REDO
-*/
-
-function KeyPress(e) {
-	var evtobj = window.event? event : e
-	if (evtobj.keyCode == 90 && evtobj.ctrlKey) alert("Ctrl+z");
-	else if (evtobj.keyCode == 89 && evtobj.ctrlKey) alert("Ctrl+y");
-}
-
-document.onkeydown = KeyPress;
