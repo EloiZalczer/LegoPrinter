@@ -1,4 +1,4 @@
-#Instructions pour utiliser le projet
+# Instructions pour utiliser le projet
 
 1. Lancer les deux serveurs (application et impression) via la commande : *lego start* (en root)
 
