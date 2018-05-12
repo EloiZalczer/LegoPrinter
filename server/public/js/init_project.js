@@ -1,6 +1,7 @@
 const block_size=30;
 var projects_list;
 
+//Prototype pour supprimer un element du DOM
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
 }
@@ -18,6 +19,7 @@ window.addEventListener("load",function(){
     
 },false);
 
+//Permet de verifier si la valeur entree est bien un entier compris dans les limites imposees pour les dimensions du projet
 function checkNumber(mode, value){
 	if(Number.isNaN(value)){
 		info("Veuillez entrer un entier");
@@ -29,6 +31,7 @@ function checkNumber(mode, value){
 	return true;
 }
 
+//Appelle les fonctions necessaires en fonction du choix de l'utilisateur : nouveau projet ou projet existant.
 function start_project(){
     if(create_project.checked==true){	
 	info("Nouveau projet");
@@ -42,6 +45,7 @@ function start_project(){
     }
 }
 
+//Envoie la requete pour charger la liste des projets et remplit le champ select
 function load_projects_list(){
     info('Chargement des projets');
 
@@ -65,6 +69,7 @@ function load_projects_list(){
     xhr.send();
 }
 
+//Envoie la requete pour recuperer la liste des couleurs et remplit le champ select
 function load_colors(){
     info('Chargement des couleurs');
 
@@ -88,7 +93,7 @@ function load_colors(){
     xhr.send();
 }
 
-
+//Envoie la requete pour recuperer les donnees d'un projet existant. Les pieces placees sont inserees simplement dans placedPieces grace au format JSON. Les differents parametres du projet sont egalement recuperes, puis l'editeur est lance
 function open_existing_project(project_to_open){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", '/project/'+projects_list[project_to_open].project_id, true);
@@ -113,6 +118,7 @@ function open_existing_project(project_to_open){
     xhr.send();
 }
 
+//Supprime l'overlay et initialise l'editeur pour permettre a l'utilisateur de travailler sur le canvas.
 function start_editor(){
     open_project.remove();
     start_overlay.remove();
@@ -144,6 +150,7 @@ function start_editor(){
     return 0;
 }
 
+//Recupere les parametres d'un nouveau projet et envoie la requete pour la creation
 function create_new_project(){
 
     sizex=document.getElementById('sizex').value;

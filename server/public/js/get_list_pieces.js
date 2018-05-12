@@ -1,4 +1,4 @@
-
+//Fonction pour creer une nouvelle piece
 function piecesConstructor(type, color, sizex, sizey){
     this.type=type;
     this.color=color;
@@ -10,6 +10,7 @@ window.addEventListener("load",function(){
     load_pieces();
 }, false);
 
+//Envoie la requete pour recuperer les pieces et remplit la liste des pieces possibles grace au constructeur plus haut.
 function load_pieces(){
     edit=0;
     info('Chargement des pièces');

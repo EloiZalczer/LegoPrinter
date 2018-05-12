@@ -8,6 +8,8 @@ window.addEventListener("load",function(){
     startPrinting();
 }, false);
 
+
+//Ouvre la fenetre popup pour rentrer l'adresse IP de l'imprimante et renseigner la position des pieces dans le reservoir, puis lance l'impression si l'utilisateur valide et que les conditions sont remplies.
 function startPrinting()
 {
     var print_model = document.getElementById("print");
@@ -62,10 +64,7 @@ function startPrinting()
     }
 }
 
-/*function cancelPrint(){
-    print_popup.remove();
-}*/
-
+//Genere les donnees a envoyer au serveur d'imoression
 function generatePrintData(pieces_position){
     var ret=[];
     for(let i=0;i<placedPieces.length;i++){
@@ -75,6 +74,7 @@ function generatePrintData(pieces_position){
     return ret;
 }
 
+//Verifie que les informations entrees par l'utilisateur sont valides et lance l'impression.
 function validate(uniquePieces){
     alert("ok");
     var pieces_position = [];
@@ -95,6 +95,7 @@ function validate(uniquePieces){
     }   
 }
 
+//Envoie la requete au serveur d'impression pour lancer l'impression.
 function sendPrintData(pieces_position, ip_addr){
     var XHR = new XMLHttpRequest();
     var name;

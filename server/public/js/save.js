@@ -2,6 +2,7 @@ window.addEventListener("load",function(){
     saveModel();
 }, false);
 
+//Envoie la requete pour sauvegarder le projet en cours
 function saveModel()
 {
     var save_model = document.getElementById("save_model");

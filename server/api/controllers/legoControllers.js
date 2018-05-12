@@ -1,7 +1,11 @@
 'use strict';
 
+
+//Importe la librairie pour acceder a la base de donnees
 var pg = require('../../lib/postgres');
 
+
+//Renvoie la liste des projets existants
 exports.list_projects = function(req, res) {
     var sql = 'SELECT * FROM PROJECT';
     pg.client.query(sql, function(err, results){
@@ -15,7 +19,7 @@ exports.list_projects = function(req, res) {
     });
 };
 
-
+//Cree un nouveau projet dans la base de donnees et le renvoie
 exports.create_project = function(req, res) {
     var sql = "INSERT INTO PROJECT (project_name, last_modified, sizex, sizey, sizez) VALUES ($1, $2, $3, $4, $5)";
     console.log(req.body.project_name);
@@ -39,7 +43,7 @@ exports.create_project = function(req, res) {
     });
 };
 
-
+//Renvoie le contenu d'un projet donne par son ID
 exports.open_project = function(req, res) {
     var sql = 'SELECT * FROM PLACED_PIECES, PIECES WHERE project_id = $1 AND PLACED_PIECES.type=PIECES.type';
     pg.client.query(sql, [ req.params.project_id ], function(err, results){
@@ -54,7 +58,7 @@ exports.open_project = function(req, res) {
     });
 };
 
-
+//Sauvegarde un projet donne par son ID
 exports.save_project = function(req, res) {
     var sql = 'DELETE FROM PLACED_PIECES WHERE project_id = $1';
     pg.client.query(sql, [ req.params.project_id ], function(err, results){
@@ -97,7 +101,7 @@ exports.save_project = function(req, res) {
     });
 };
 
-
+//Supprime un projet donne par son ID
 exports.delete_project = function(req, res) {
     var sql = 'DELETE FROM PLACED_PIECES WHERE project_id = $1';
     var project_id = req.params.project_id;
@@ -121,10 +125,12 @@ exports.delete_project = function(req, res) {
     });
 }
 
+//Renvoie la page principale de l'application
 exports.mainpage = function(req, res){
     res.render('lego_main.html');
 };
 
+//Renvoie la liste des pieces possibles	(plus utilise)
 exports.list_pieces = function(req, res){
     var sql = 'SELECT * FROM PIECES';
     pg.client.query(sql, function(err, results){
@@ -138,6 +144,7 @@ exports.list_pieces = function(req, res){
     });
 }
 
+//Renvoie la liste des couleurs possibles
 exports.list_colors = function(req, res){
     var sql = 'SELECT * FROM COLORS_MINIMAL';
     pg.client.query(sql, function(err, results){

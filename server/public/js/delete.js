@@ -1,5 +1,5 @@
 /*
-PRINTING
+DELETING PROJECT
 */
 
 var size_container=10;
@@ -8,6 +8,7 @@ window.addEventListener("load",function(){
     deleteModel();
 }, false);
 
+//Affiche le popup pour confirmer la suppression du projet et appelle la fonction deleteProject si l'utilisateur confirme
 function deleteModel()
 {
     var delete_model = document.getElementById("delete_model");
@@ -24,6 +25,7 @@ function deleteModel()
     }
 }
 
+//Envoie la requete de suppression du projet
 function deleteProject(){
     var xhr = new XMLHttpRequest();
     
