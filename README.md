@@ -1,3 +1,5 @@
+# [Wiki du projet](https://projets-ima.plil.fr/mediawiki/index.php/IMA4_2017/2018_P42)
+
 # Instructions pour utiliser le projet
 
 1. Lancer les deux serveurs (application et impression) via la commande : *lego start* (en root)
