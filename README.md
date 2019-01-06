@@ -2,7 +2,7 @@
 
 # Instructions pour utiliser le projet
 
-1. Lancer les deux serveurs (application et impression) via la commande : *lego start* (en root)
+1. Lancer les deux serveurs (application et impression)
 
 ATTENTION : toujours brancher l'imprimante sur secteur avant de la brancher sur la Raspberry Pi, sinon l'imprimante tente de s'alimenter via la Raspberry Pi et ne fonctionne pas.
 
